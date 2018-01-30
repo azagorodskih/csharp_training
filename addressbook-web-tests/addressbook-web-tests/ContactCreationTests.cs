@@ -12,19 +12,19 @@ namespace WebAddressbookTests
         [Test]
         public void ContactCreationTest()
         {
-            OpenHomePage();
-            Login(new AccountData("admin", "secret"));
-            InitNewContactCreation();
+            navigationHelper.OpenHomePage();
+            authHelper.Login(new AccountData("admin", "secret"));
+            contactHelper.InitNewContactCreation();
 
             ContactData contact = new ContactData("Roman", "Dumtsev");
             contact.Middlename = "S.";
             contact.Nickname = "r.dumtsev";
             contact.Title = "Technical Specialist";
             contact.Company = "EMS";
-            FillContactForm(contact);
+            contactHelper.FillContactForm(contact);
 
-            SubmitContactCreation();
-            Logout();
+            contactHelper.SubmitContactCreation();
+            authHelper.Logout();
         }
     }
 }
