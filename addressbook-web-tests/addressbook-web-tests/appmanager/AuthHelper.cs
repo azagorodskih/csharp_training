@@ -11,7 +11,8 @@ namespace WebAddressbookTests
 {
     public class AuthHelper : HelperBase
     {
-        public AuthHelper(IWebDriver driver) : base(driver)
+        public AuthHelper(ApplicationManager manager) 
+            : base(manager)
         {
         }
 
