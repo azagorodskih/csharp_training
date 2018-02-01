@@ -14,7 +14,7 @@ namespace WebAddressbookTests
         //удалить контакт, вызвано из карточки контакта
         public void ContactRemovalTest_RemoveFromCard()
         {
-            app.Contacts.RemoveContactFromCard(3);
+            app.Contacts.RemoveContactFromCard(1);
         }
 
         [Test]

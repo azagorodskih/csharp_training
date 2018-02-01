@@ -41,12 +41,11 @@ namespace WebAddressbookTests
 
         public ContactHelper ModifyFromCard(int index, ContactData newData)
         {
-            OpenContractCard(index);
-            InitContactModification();
+            OpenContactCardForModify(index);
             Modify(newData);
             return this;
         }
-
+                
         public ContactHelper AddToGroup(string groupName)
         {
             SelectGroupForAdd(groupName);
@@ -74,8 +73,7 @@ namespace WebAddressbookTests
 
         public ContactHelper RemoveContactFromCard(int index)
         {
-            OpenContractCard(index);
-            InitContactModification();
+            OpenContactCardForModify(index);
             RemoveContact();
             //ReturnToHomePage();
             return this;
@@ -159,7 +157,7 @@ namespace WebAddressbookTests
             return this;
         }
 
-        public ContactHelper OpenContractCard(int index)
+        public ContactHelper OpenContactCard(int index)
         {
             driver.FindElement(By.XPath("(//img[@alt='Details'])[" + index + "]")).Click();
             return this;
@@ -168,6 +166,13 @@ namespace WebAddressbookTests
         public ContactHelper InitContactModification()
         {
             driver.FindElement(By.Name("modifiy")).Click();
+            return this;
+        }
+
+        public ContactHelper OpenContactCardForModify(int index)
+        {
+            OpenContactCard(index);
+            InitContactModification();
             return this;
         }
 
