@@ -10,7 +10,8 @@ namespace WebAddressbookTests
     public class GroupCreationTests : TestBase
     {
         [Test]
-        public void GroupCreationTest()
+        //заполнить все поля
+        public void GroupCreationTest_AllFields()
         {
             GroupData group = new GroupData("aaa");
             group.Header = "bbb";
@@ -22,12 +23,26 @@ namespace WebAddressbookTests
         }
 
         [Test]
-        public void EmptyGroupCreationTest()
+        //оставить все поля пустыми
+        public void GroupCreationTest_EmptyFields()
         {
             GroupData group = new GroupData("");
             group.Header = "";
             group.Footer = "";
             
+            app.Groups.Create(group);
+
+            app.Auth.Logout();
+        }
+
+        [Test]
+        //заполнить поля спецсимволами
+        public void GroupCreationTest_SpecCharFields()
+        {
+            GroupData group = new GroupData("$$$");
+            group.Header = "***";
+            group.Footer = "&&&";
+
             app.Groups.Create(group);
 
             app.Auth.Logout();

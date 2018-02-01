@@ -10,9 +10,21 @@ namespace WebAddressbookTests
     public class GroupRemovalTests : TestBase
     {
         [Test]
-        public void GroupRemovalTest()
+        //удалить одну группу
+        public void GroupRemovalTest_RemoveOne()
         {
-            app.Groups.Remove(1);
+            int[] index = new int[] { 1 };
+
+            app.Groups.Remove(index);
+        }
+
+        [Test]
+        //удалить несколько групп
+        public void GroupRemovalTest_RemoveSeveral()
+        {
+            int[] index = new int[] { 2, 3 };
+
+            app.Groups.Remove(index);
         }
     }
 }

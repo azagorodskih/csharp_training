@@ -24,6 +24,88 @@ namespace WebAddressbookTests
             return this;
         }
 
+        public ContactHelper Modify(ContactData newData)
+        {
+            FillContactForm(newData);
+            SubmitContactModification();
+            ReturnToHomePage();
+            return this;
+        }
+                
+        public ContactHelper ModifyFromList(int index, ContactData newData)
+        {
+            ModifyContactFromList(index);
+            Modify(newData);
+            return this;
+        }
+
+        public ContactHelper ModifyFromCard(int index, ContactData newData)
+        {
+            OpenContractCard(index);
+            InitContactModification();
+            Modify(newData);
+            return this;
+        }
+
+        public ContactHelper AddToGroup(string groupName)
+        {
+            SelectGroupForAdd(groupName);
+            SubmitAddToGroup();
+            GoToGroupPage(groupName);
+            return this;
+        }
+
+        public ContactHelper AddSelectedContactsToGroup(int[] index, string groupName)
+        {
+            foreach (int i in index)
+            {
+                SelectContact(i);
+            }
+            AddToGroup(groupName);
+            return this;
+        }
+
+        public ContactHelper AddAllContactsToGroup(string groupName)
+        {
+            SelectAllContacts();
+            AddToGroup(groupName);
+            return this;
+        }  
+
+        public ContactHelper RemoveContactFromCard(int index)
+        {
+            OpenContractCard(index);
+            InitContactModification();
+            RemoveContact();
+            //ReturnToHomePage();
+            return this;
+        }
+        
+        public ContactHelper RemoveFromList()
+        {
+            RemoveContact();
+            SubmitContactRemoval();
+            //ReturnToHomePage();
+            return this;
+        }
+
+        public ContactHelper RemoveSelectedContactsFromList(int[] index)
+        {
+            foreach (int i in index)
+            {
+                SelectContact(i);
+            }
+            RemoveFromList();
+            return this;
+        }
+                
+        public ContactHelper RemoveAllContactsFromList()
+        {
+            SelectAllContacts();
+            RemoveFromList();
+            return this;
+        }
+
         public ContactHelper InitNewContactCreation()
         {
             driver.FindElement(By.LinkText("add new")).Click();
@@ -62,6 +144,88 @@ namespace WebAddressbookTests
         public ContactHelper SubmitContactCreation()
         {
             driver.FindElement(By.Name("submit")).Click();
+            return this;
+        }
+
+        public ContactHelper ReturnToHomePage()
+        {
+            driver.FindElement(By.LinkText("home page")).Click();
+            return this;
+        }
+
+        public ContactHelper SubmitContactModification()
+        {
+            driver.FindElement(By.Name("update")).Click();
+            return this;
+        }
+
+        public ContactHelper OpenContractCard(int index)
+        {
+            driver.FindElement(By.XPath("(//img[@alt='Details'])[" + index + "]")).Click();
+            return this;
+        }
+
+        public ContactHelper InitContactModification()
+        {
+            driver.FindElement(By.Name("modifiy")).Click();
+            return this;
+        }
+
+        public ContactHelper ModifyContactFromList(int index)
+        {
+            driver.FindElement(By.XPath("(//img[@alt='Edit'])[" + index + "]")).Click();
+            return this;
+        }
+                
+        public ContactHelper GoToGroupPage(string groupName)
+        {
+            driver.FindElement(By.LinkText("group page \"" + groupName + "\"")).Click();
+            return this;
+        }
+
+        public ContactHelper SubmitAddToGroup()
+        {
+            driver.FindElement(By.Name("add")).Click();
+            return this;
+        }
+
+        public ContactHelper SelectGroupForAdd(string groupName)
+        {
+            new SelectElement(driver.FindElement(By.Name("to_group"))).SelectByText(groupName); ;
+            return this;
+        }
+
+        public ContactHelper SelectContact(int index)
+        {
+            driver.FindElement(By.XPath("(//input[@name='selected[]'])[" + index + "]")).Click();
+            return this;
+        }
+
+        public ContactHelper SelectAllContacts()
+        {
+            driver.FindElement(By.Id("MassCB")).Click();
+            return this;
+        }
+
+        public ContactHelper SubmitContactRemoval()
+        {
+            try
+            {
+                //driver.SwitchTo().Alert() = доступ к появившемуся диалоговому окну
+                //Accept() = нажатие на кнопку ОК
+                driver.SwitchTo().Alert().Accept();
+            }
+            catch (NoAlertPresentException)
+            {
+                //исключение: диалоговое окно не появилось, ничего не делаем
+            }
+            
+            return this;
+        }
+
+        public ContactHelper RemoveContact()
+        {
+            driver.FindElement(By.XPath("//input[@value='Delete']")).Click();
             return this;
         }
     }
