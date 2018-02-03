@@ -16,6 +16,7 @@ namespace WebAddressbookTests
             int[] index = new int[] { 1 };
 
             app.Groups.Remove(index);
+            app.Auth.Logout();
         }
 
         [Test]
@@ -25,6 +26,7 @@ namespace WebAddressbookTests
             int[] index = new int[] { 2, 3 };
 
             app.Groups.Remove(index);
+            app.Auth.Logout();
         }
     }
 }

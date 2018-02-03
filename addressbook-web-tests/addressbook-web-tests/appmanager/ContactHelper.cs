@@ -18,22 +18,16 @@ namespace WebAddressbookTests
 
         public ContactHelper Create(ContactData contact)
         {
+            manager.Navigator.OpenHomePage();
             InitNewContactCreation();
             FillContactForm(contact);
             SubmitContactCreation();
             return this;
         }
-
-        public ContactHelper Modify(ContactData newData)
-        {
-            FillContactForm(newData);
-            SubmitContactModification();
-            ReturnToHomePage();
-            return this;
-        }
-                
+                                
         public ContactHelper ModifyFromList(int index, ContactData newData)
         {
+            manager.Navigator.OpenHomePage();
             ModifyContactFromList(index);
             Modify(newData);
             return this;
@@ -41,21 +35,15 @@ namespace WebAddressbookTests
 
         public ContactHelper ModifyFromCard(int index, ContactData newData)
         {
+            manager.Navigator.OpenHomePage();
             OpenContactCardForModify(index);
             Modify(newData);
             return this;
-        }
-                
-        public ContactHelper AddToGroup(string groupName)
-        {
-            SelectGroupForAdd(groupName);
-            SubmitAddToGroup();
-            GoToGroupPage(groupName);
-            return this;
-        }
-
+        }   
+        
         public ContactHelper AddSelectedContactsToGroup(int[] index, string groupName)
         {
+            manager.Navigator.OpenHomePage();
             foreach (int i in index)
             {
                 SelectContact(i);
@@ -66,6 +54,7 @@ namespace WebAddressbookTests
 
         public ContactHelper AddAllContactsToGroup(string groupName)
         {
+            manager.Navigator.OpenHomePage();
             SelectAllContacts();
             AddToGroup(groupName);
             return this;
@@ -73,22 +62,16 @@ namespace WebAddressbookTests
 
         public ContactHelper RemoveContactFromCard(int index)
         {
+            manager.Navigator.OpenHomePage();
             OpenContactCardForModify(index);
             RemoveContact();
             //ReturnToHomePage();
             return this;
         }
-        
-        public ContactHelper RemoveFromList()
-        {
-            RemoveContact();
-            SubmitContactRemoval();
-            //ReturnToHomePage();
-            return this;
-        }
-
+                
         public ContactHelper RemoveSelectedContactsFromList(int[] index)
         {
+            manager.Navigator.OpenHomePage();
             foreach (int i in index)
             {
                 SelectContact(i);
@@ -99,6 +82,7 @@ namespace WebAddressbookTests
                 
         public ContactHelper RemoveAllContactsFromList()
         {
+            manager.Navigator.OpenHomePage();
             SelectAllContacts();
             RemoveFromList();
             return this;
@@ -231,6 +215,30 @@ namespace WebAddressbookTests
         public ContactHelper RemoveContact()
         {
             driver.FindElement(By.XPath("//input[@value='Delete']")).Click();
+            return this;
+        }
+
+        public ContactHelper Modify(ContactData newData)
+        {
+            FillContactForm(newData);
+            SubmitContactModification();
+            ReturnToHomePage();
+            return this;
+        }
+
+        public ContactHelper AddToGroup(string groupName)
+        {
+            SelectGroupForAdd(groupName);
+            SubmitAddToGroup();
+            GoToGroupPage(groupName);
+            return this;
+        }
+
+        public ContactHelper RemoveFromList()
+        {
+            RemoveContact();
+            SubmitContactRemoval();
+            //ReturnToHomePage();
             return this;
         }
     }

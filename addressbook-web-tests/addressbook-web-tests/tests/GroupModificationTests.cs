@@ -19,6 +19,7 @@ namespace WebAddressbookTests
             newData.Footer = "ooo";
 
             app.Groups.Modify(1, newData);
+            app.Auth.Logout();
         }
 
         [Test]
@@ -30,6 +31,7 @@ namespace WebAddressbookTests
             emptyData.Footer = "";
 
             app.Groups.Modify(3, emptyData);
+            app.Auth.Logout();
         }
     }
 }
