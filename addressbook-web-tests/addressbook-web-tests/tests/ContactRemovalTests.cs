@@ -15,7 +15,7 @@ namespace WebAddressbookTests
         public void ContactRemovalTest_RemoveFromCard()
         {
             app.Contacts.RemoveContactFromCard(1);
-            app.Auth.Logout();
+            //app.Auth.Logout();
         }
 
         [Test]
@@ -25,7 +25,7 @@ namespace WebAddressbookTests
             int[] index = new int[] { 2 };
 
             app.Contacts.RemoveSelectedContactsFromList(index);
-            app.Auth.Logout();
+            //app.Auth.Logout();
         }
 
         [Test]
@@ -42,7 +42,7 @@ namespace WebAddressbookTests
         public void ContactRemovalTest_RemoveAll()
         {
             app.Contacts.RemoveAllContactsFromList();
-            app.Auth.Logout();
+            //app.Auth.Logout();
         }
     }
 }

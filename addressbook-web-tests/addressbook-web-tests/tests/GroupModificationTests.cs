@@ -19,7 +19,7 @@ namespace WebAddressbookTests
             newData.Footer = "ooo";
 
             app.Groups.Modify(1, newData);
-            app.Auth.Logout();
+            //app.Auth.Logout();
         }
 
         [Test]
@@ -31,7 +31,19 @@ namespace WebAddressbookTests
             emptyData.Footer = "";
 
             app.Groups.Modify(3, emptyData);
-            app.Auth.Logout();
+            //app.Auth.Logout();
+        }
+
+        [Test]
+        //частичная замена старых значений новыми
+        public void GroupModificationTest_SomeFields()
+        {
+            GroupData emptyData = new GroupData("bbb");
+            emptyData.Header = null;
+            emptyData.Footer = null;
+
+            app.Groups.Modify(1, emptyData);
+            //app.Auth.Logout();
         }
     }
 }

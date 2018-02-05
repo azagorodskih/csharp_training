@@ -27,7 +27,7 @@ namespace WebAddressbookTests
 
             app.Contacts.Create(contact);
 
-            app.Auth.Logout();
+            //app.Auth.Logout();
         }
 
         [Test]
@@ -39,7 +39,7 @@ namespace WebAddressbookTests
 
             app.Contacts.Create(contact);
 
-            app.Auth.Logout();
+            //app.Auth.Logout();
         }
         [Test]
         //все поля пустые
@@ -49,7 +49,7 @@ namespace WebAddressbookTests
 
             app.Contacts.Create(contact);
 
-            app.Auth.Logout();
+            //app.Auth.Logout();
         }
     }
 }

@@ -27,7 +27,7 @@ namespace WebAddressbookTests
             contact.Email2 = "Blinova@ems.ru";
 
             app.Contacts.ModifyFromList(1, contact);
-            app.Auth.Logout();
+            //app.Auth.Logout();
         }
 
         [Test]
@@ -37,7 +37,7 @@ namespace WebAddressbookTests
             ContactData contact = new ContactData("", "");
 
             app.Contacts.ModifyFromCard(2, contact);
-            app.Auth.Logout();
+            //app.Auth.Logout();
         }
 
         [Test]
@@ -47,7 +47,7 @@ namespace WebAddressbookTests
             int[] index = new int[] { 1 };
 
             app.Contacts.AddSelectedContactsToGroup(index, "nnn");
-            app.Auth.Logout();
+            //app.Auth.Logout();
         }
 
         [Test]
@@ -57,7 +57,7 @@ namespace WebAddressbookTests
             int[] index = new int[] { 2, 3 };
 
             app.Contacts.AddSelectedContactsToGroup(index, "mmm");
-            app.Auth.Logout();
+            //app.Auth.Logout();
         }
 
         [Test]
@@ -65,7 +65,7 @@ namespace WebAddressbookTests
         public void ContactModificationTest_AddToGroupAll()
         {
             app.Contacts.AddAllContactsToGroup("aaa");
-            app.Auth.Logout();
+            //app.Auth.Logout();
         }
     }
 }
