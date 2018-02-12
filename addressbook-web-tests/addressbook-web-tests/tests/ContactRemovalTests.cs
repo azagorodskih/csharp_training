@@ -8,13 +8,13 @@ using NUnit.Framework;
 namespace WebAddressbookTests
 {
     [TestFixture]
-    public class ContactRemovalTests : TestBase
+    public class ContactRemovalTests : AuthTestBase
     {
         [Test]
         //удалить контакт, вызвано из карточки контакта
         public void ContactRemovalTest_RemoveFromCard()
         {
-            app.Contacts.RemoveContactFromCard(1);
+            app.Contacts.RemoveContactFromCard(2);
             //app.Auth.Logout();
         }
 
@@ -22,7 +22,7 @@ namespace WebAddressbookTests
         //удалить один контакт, вызвано из списка контакта
         public void ContactRemovalTest_RemoveOne()
         {
-            int[] index = new int[] { 2 };
+            int[] index = new int[] { 3 };
 
             app.Contacts.RemoveSelectedContactsFromList(index);
             //app.Auth.Logout();
@@ -32,7 +32,7 @@ namespace WebAddressbookTests
         //удалить несколько контактов, вызвано из списка контакта
         public void ContactRemovalTest_RemoveSeveral()
         {
-            int[] index = new int[] { 1, 2 };
+            int[] index = new int[] { 2, 3 };
 
             app.Contacts.RemoveSelectedContactsFromList(index);
         }

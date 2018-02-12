@@ -13,9 +13,9 @@ namespace WebAddressbookTests
         //удалить одну группу
         public void GroupRemovalTest_RemoveOne()
         {
-            int[] index = new int[] { 1 };
+            int[] index = new int[] { 2 };
 
-            app.Groups.Remove(index);
+            app.Groups.RemoveGroup(index);
             //app.Auth.Logout();
         }
 
@@ -23,9 +23,9 @@ namespace WebAddressbookTests
         //удалить несколько групп
         public void GroupRemovalTest_RemoveSeveral()
         {
-            int[] index = new int[] { 2, 3 };
+            int[] index = new int[] { 1, 5, 2 };
 
-            app.Groups.Remove(index);
+            app.Groups.RemoveGroup(index);
             //app.Auth.Logout();
         }
     }

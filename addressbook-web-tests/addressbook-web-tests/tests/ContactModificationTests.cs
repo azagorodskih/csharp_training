@@ -8,7 +8,7 @@ using NUnit.Framework;
 namespace WebAddressbookTests
 {
     [TestFixture]
-    public class ContactModificationTests : TestBase
+    public class ContactModificationTests : AuthTestBase
     {
         [Test]
         //замена старых значений новыми, вызвано из списка контактов
@@ -26,7 +26,7 @@ namespace WebAddressbookTests
             contact.Email = "y.blinova@mail.ru";
             contact.Email2 = "Blinova@ems.ru";
 
-            app.Contacts.ModifyFromList(1, contact);
+            app.Contacts.ModifyContactFromList(3, contact);
             //app.Auth.Logout();
         }
 
@@ -36,7 +36,7 @@ namespace WebAddressbookTests
         {
             ContactData contact = new ContactData("", "");
 
-            app.Contacts.ModifyFromCard(2, contact);
+            app.Contacts.ModifyContactFromCard(3, contact);
             //app.Auth.Logout();
         }
 
@@ -44,7 +44,7 @@ namespace WebAddressbookTests
         //добавить один контакт в группу, вызвано из списка
         public void ContactModificationTest_AddToGroupOne()
         {
-            int[] index = new int[] { 1 };
+            int[] index = new int[] { 3 };
 
             app.Contacts.AddSelectedContactsToGroup(index, "nnn");
             //app.Auth.Logout();

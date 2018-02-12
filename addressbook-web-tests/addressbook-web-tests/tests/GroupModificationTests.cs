@@ -18,7 +18,7 @@ namespace WebAddressbookTests
             newData.Header = "nnn";
             newData.Footer = "ooo";
 
-            app.Groups.Modify(1, newData);
+            app.Groups.ModifyGroup(2, newData);
             //app.Auth.Logout();
         }
 
@@ -30,7 +30,7 @@ namespace WebAddressbookTests
             emptyData.Header = "";
             emptyData.Footer = "";
 
-            app.Groups.Modify(3, emptyData);
+            app.Groups.ModifyGroup(1, emptyData);
             //app.Auth.Logout();
         }
 
@@ -42,7 +42,7 @@ namespace WebAddressbookTests
             emptyData.Header = null;
             emptyData.Footer = null;
 
-            app.Groups.Modify(1, emptyData);
+            app.Groups.ModifyGroup(1, emptyData);
             //app.Auth.Logout();
         }
     }

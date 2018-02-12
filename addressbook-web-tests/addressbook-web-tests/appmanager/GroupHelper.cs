@@ -11,7 +11,7 @@ namespace WebAddressbookTests
 {
     public class GroupHelper : HelperBase
     {
-        public GroupHelper(ApplicationManager manager) 
+        public GroupHelper(ApplicationManager manager)
             : base(manager)
         {
         }
@@ -22,30 +22,69 @@ namespace WebAddressbookTests
             InitNewGroupCreation();
             FillGroupForm(group);
             SubmitGroupCreation();
-            ReturnToGroupsPage();
+            //ReturnToGroupsPage();
+            manager.Navigator.GoToGroupsPage();
             return this;
         }
 
         public GroupHelper Modify(int index, GroupData group)
         {
-            manager.Navigator.GoToGroupsPage();
+            //manager.Navigator.GoToGroupsPage();
             SelectGroup(index);
             InitGroupModification();
             FillGroupForm(group);
             SubmitGroupModification();
-            ReturnToGroupsPage();
+            //ReturnToGroupsPage();
+            //manager.Navigator.GoToGroupsPage();
             return this;
         }
 
-        public GroupHelper Remove(int[] index)
+        public GroupHelper ModifyGroup(int index, GroupData group)
         {
+            manager.Navigator.GoToGroupsPage();
+            if (IsGroupPresent(index))
+            {
+                Modify(index, group);
+            }
+            else if(IsGroupPresent(1))
+            {
+                Modify(1, group);
+            }
+            else
+            {
+                Create(group);
+                //Modify(1, group);
+            }
+            manager.Navigator.GoToGroupsPage();
+            return this;
+        }
+
+        public GroupHelper RemoveGroup(int[] index)
+        {
+            int totalSelected = 0;
+
             manager.Navigator.GoToGroupsPage();
             foreach (int i in index)
             {
-                SelectGroup(i);
+                if (IsGroupPresent(i))
+                {
+                    SelectGroup(i);
+                    totalSelected++;
+                }
             }
-            RemoveGroup();
-            ReturnToGroupsPage();
+
+            if (totalSelected == 0)
+            {
+                if (! IsGroupPresent(1))
+                {
+                    Create(new GroupData(""));
+                }
+                SelectGroup(1);
+            }
+            
+            Remove();
+            //ReturnToGroupsPage();
+            manager.Navigator.GoToGroupsPage();
             return this;
         }
 
@@ -75,17 +114,17 @@ namespace WebAddressbookTests
             return this;
         }
 
-        public GroupHelper RemoveGroup()
+        public GroupHelper Remove()
         {
             driver.FindElement(By.Name("delete")).Click();
             return this;
         }
 
-        public GroupHelper ReturnToGroupsPage()
-        {
-            driver.FindElement(By.LinkText("groups")).Click();
-            return this;
-        }
+        //public GroupHelper ReturnToGroupsPage()
+        //{
+        //    driver.FindElement(By.LinkText("groups")).Click();
+        //    return this;
+        //}
 
         public GroupHelper SubmitGroupModification()
         {
@@ -97,6 +136,11 @@ namespace WebAddressbookTests
         {
             driver.FindElement(By.Name("edit")).Click();
             return this;
+        }
+
+        public bool IsGroupPresent(int index)
+        {
+            return IsElementPresent(By.XPath("(//input[@name='selected[]'])[" + index + "]")) ;
         }
     }
 }
