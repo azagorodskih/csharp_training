@@ -17,8 +17,31 @@ namespace WebAddressbookTests
             GroupData newData = new GroupData("mmm");
             newData.Header = "nnn";
             newData.Footer = "ooo";
+            int index = 5; //отсчет от 0
 
-            app.Groups.ModifyGroup(2, newData);
+            List<GroupData> oldGroups = app.Groups.GetGroupList();
+
+            if(oldGroups.Count > 0)
+            {
+                if(! app.Groups.IsGroupPresent(index))
+                {
+                    index = 0;
+                }
+                app.Groups.Modify(index, newData);
+                oldGroups[index].Name = newData.Name;
+            }
+            else
+            {
+                app.Groups.Create(newData);
+                oldGroups.Add(newData);
+            }
+
+            List<GroupData> newGroups = app.Groups.GetGroupList();
+            //oldGroups[index].Name = newData.Name;
+            oldGroups.Sort();
+            newGroups.Sort();
+            Assert.AreEqual(oldGroups, newGroups);
+
             //app.Auth.Logout();
         }
 
@@ -29,8 +52,31 @@ namespace WebAddressbookTests
             GroupData emptyData = new GroupData("");
             emptyData.Header = "";
             emptyData.Footer = "";
+            int index = 1; //отсчет от 0
 
-            app.Groups.ModifyGroup(1, emptyData);
+            List<GroupData> oldGroups = app.Groups.GetGroupList();
+
+            if (oldGroups.Count > 0)
+            {
+                if (! app.Groups.IsGroupPresent(index))
+                {
+                    index = 0;
+                }
+                app.Groups.Modify(index, emptyData);
+                oldGroups[index].Name = emptyData.Name;
+            }
+            else
+            {
+                app.Groups.Create(emptyData);
+                oldGroups.Add(emptyData);
+            }
+
+            List<GroupData> newGroups = app.Groups.GetGroupList();
+            //oldGroups[index].Name = newData.Name;
+            oldGroups.Sort();
+            newGroups.Sort();
+            Assert.AreEqual(oldGroups, newGroups);
+
             //app.Auth.Logout();
         }
 
@@ -38,11 +84,34 @@ namespace WebAddressbookTests
         //частичная замена старых значений новыми
         public void GroupModificationTest_SomeFields()
         {
-            GroupData emptyData = new GroupData("bbb");
-            emptyData.Header = null;
-            emptyData.Footer = null;
+            GroupData newData = new GroupData("bbb");
+            newData.Header = null;
+            newData.Footer = null;
+            int index = 5; //отсчет от 0
 
-            app.Groups.ModifyGroup(1, emptyData);
+            List<GroupData> oldGroups = app.Groups.GetGroupList();
+
+            if (oldGroups.Count > 0)
+            {
+                if (! app.Groups.IsGroupPresent(index))
+                {
+                    index = 0;
+                }
+                app.Groups.Modify(index, newData);
+                oldGroups[index].Name = newData.Name;
+            }
+            else
+            {
+                app.Groups.Create(newData);
+                oldGroups.Add(newData);
+            }
+
+            List<GroupData> newGroups = app.Groups.GetGroupList();
+            //oldGroups[index].Name = newData.Name;
+            oldGroups.Sort();
+            newGroups.Sort();
+            Assert.AreEqual(oldGroups, newGroups);
+            
             //app.Auth.Logout();
         }
     }

@@ -29,64 +29,76 @@ namespace WebAddressbookTests
 
         public GroupHelper Modify(int index, GroupData group)
         {
-            //manager.Navigator.GoToGroupsPage();
+            manager.Navigator.GoToGroupsPage();
             SelectGroup(index);
             InitGroupModification();
             FillGroupForm(group);
             SubmitGroupModification();
             //ReturnToGroupsPage();
-            //manager.Navigator.GoToGroupsPage();
-            return this;
-        }
-
-        public GroupHelper ModifyGroup(int index, GroupData group)
-        {
-            manager.Navigator.GoToGroupsPage();
-            if (IsGroupPresent(index))
-            {
-                Modify(index, group);
-            }
-            else if(IsGroupPresent(1))
-            {
-                Modify(1, group);
-            }
-            else
-            {
-                Create(group);
-                //Modify(1, group);
-            }
             manager.Navigator.GoToGroupsPage();
             return this;
         }
 
-        public GroupHelper RemoveGroup(int[] index)
+        public GroupHelper RemoveGroup(List<int> index)
         {
-            int totalSelected = 0;
-
             manager.Navigator.GoToGroupsPage();
             foreach (int i in index)
             {
-                if (IsGroupPresent(i))
-                {
-                    SelectGroup(i);
-                    totalSelected++;
-                }
+                SelectGroup(i);
             }
-
-            if (totalSelected == 0)
-            {
-                if (! IsGroupPresent(1))
-                {
-                    Create(new GroupData(""));
-                }
-                SelectGroup(1);
-            }
-            
             Remove();
             //ReturnToGroupsPage();
             manager.Navigator.GoToGroupsPage();
             return this;
         }
+
+        //public GroupHelper ModifyGroup(int index, GroupData group)
+        //{
+        //    manager.Navigator.GoToGroupsPage();
+        //    if (IsGroupPresent(index))
+        //    {
+        //        Modify(index, group);
+        //    }
+        //    else if(IsGroupPresent(0))
+        //    {
+        //        Modify(0, group);
+        //    }
+        //    else
+        //    {
+        //        Create(group);
+        //    }
+        //    manager.Navigator.GoToGroupsPage();
+        //    return this;
+        //}
+
+        //public GroupHelper RemoveGroup(int[] index)
+        //{
+        //    int totalSelected = 0;
+
+        //    manager.Navigator.GoToGroupsPage();
+        //    foreach (int i in index)
+        //    {
+        //        if (IsGroupPresent(i))
+        //        {
+        //            SelectGroup(i);
+        //            totalSelected++;
+        //        }
+        //    }
+
+        //    if (totalSelected == 0)
+        //    {
+        //        if (! IsGroupPresent(0))
+        //        {
+        //            Create(new GroupData(""));
+        //        }
+        //        SelectGroup(0);
+        //    }
+
+        //    Remove();
+        //    //ReturnToGroupsPage();
+        //    manager.Navigator.GoToGroupsPage();
+        //    return this;
+        //}
 
         public GroupHelper InitNewGroupCreation()
         {
@@ -110,7 +122,7 @@ namespace WebAddressbookTests
 
         public GroupHelper SelectGroup(int index)
         {
-            driver.FindElement(By.XPath("(//input[@name='selected[]'])[" + index + "]")).Click();
+            driver.FindElement(By.XPath("(//input[@name='selected[]'])[" + (index + 1) + "]")).Click();
             return this;
         }
 
@@ -140,7 +152,20 @@ namespace WebAddressbookTests
 
         public bool IsGroupPresent(int index)
         {
-            return IsElementPresent(By.XPath("(//input[@name='selected[]'])[" + index + "]")) ;
+            return IsElementPresent(By.XPath("(//input[@name='selected[]'])[" + (index + 1) + "]")) ;
+        }
+        
+        public List<GroupData> GetGroupList()
+        {
+            List<GroupData> groups = new List<GroupData>();
+
+            manager.Navigator.GoToGroupsPage();
+            ICollection<IWebElement> elements = driver.FindElements(By.CssSelector("span.group"));
+            foreach(IWebElement element in elements)
+            {
+                groups.Add(new GroupData(element.Text));
+            }
+            return groups;
         }
     }
 }

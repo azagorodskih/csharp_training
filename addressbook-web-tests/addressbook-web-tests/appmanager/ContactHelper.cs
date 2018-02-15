@@ -26,65 +26,29 @@ namespace WebAddressbookTests
             return this;
         }
                                 
-        public ContactHelper ModifyContactFromList(int index, ContactData newData)
+        public ContactHelper ModifyFromList(int index, ContactData newData)
         {
             manager.Navigator.OpenHomePage();
-            if (IsContactPresent(index))
-            {
-                ModifyFromList(index, newData);
-            }
-            else if (IsContactPresent(1))
-            {
-                ModifyFromList(1, newData);
-            }
-            else
-            {
-                Create(newData);
-            }
+            InitModifyContactFromList(index);
+            Modify(newData);
             return this;
         }
                 
-        public ContactHelper ModifyContactFromCard(int index, ContactData newData)
+        public ContactHelper ModifyFromCard(int index, ContactData newData)
         {
             manager.Navigator.OpenHomePage();
-            if (IsContactPresent(index))
-            {
-                ModifyfromCard(index, newData);
-            }
-            else if (IsContactPresent(1))
-            {
-                ModifyfromCard(1, newData);
-            }
-            else
-            {
-                Create(newData);
-            }
+            OpenContactCardForModify(index);
+            Modify(newData);
             return this;
         }
 
-        public ContactHelper AddSelectedContactsToGroup(int[] index, string groupName)
+        public ContactHelper AddSelectedContactsToGroup(List<int> index, string groupName)
         {
-            int totalSelected = 0;
-
             manager.Navigator.OpenHomePage();
             foreach (int i in index)
             {
-                if (IsContactPresent(i))
-                {
-                    SelectContact(i);
-                    totalSelected++;
-                }
+                SelectContact(i);
             }
-
-            if (totalSelected == 0)
-            {
-                if (!IsContactPresent(1))
-                {
-                    Create(new ContactData("", ""));
-                }
-                SelectContact(1);
-            }
-
             AddToGroup(groupName);
             return this;
         }
@@ -92,10 +56,6 @@ namespace WebAddressbookTests
         public ContactHelper AddAllContactsToGroup(string groupName)
         {
             manager.Navigator.OpenHomePage();
-            if (! IsContactPresent(1))
-            {
-                Create(new ContactData("", ""));
-            }
             SelectAllContacts();
             AddToGroup(groupName);
             return this;
@@ -104,45 +64,18 @@ namespace WebAddressbookTests
         public ContactHelper RemoveContactFromCard(int index)
         {
             manager.Navigator.OpenHomePage();
-            if (IsContactPresent(index))
-            {
-                RemoveFromCard(index);
-            }
-            else
-            {
-                if (!IsContactPresent(1))
-                {
-                    Create(new ContactData("", ""));
-                }
-                RemoveFromCard(1);
-            }
+            RemoveFromCard(index);
             //ReturnToHomePage();
             return this;
         }
                 
-        public ContactHelper RemoveSelectedContactsFromList(int[] index)
+        public ContactHelper RemoveSelectedContactsFromList(List<int> index)
         {
-            int totalSelected = 0;
-
             manager.Navigator.OpenHomePage();
             foreach (int i in index)
             {
-                if (IsContactPresent(i))
-                {
-                    SelectContact(i);
-                    totalSelected++;
-                }
+                SelectContact(i);
             }
-
-            if (totalSelected == 0)
-            {
-                if (!IsContactPresent(1))
-                {
-                    Create(new ContactData("", ""));
-                }
-                SelectContact(1);
-            }
-
             RemoveFromList();
             return this;
         }
@@ -150,10 +83,6 @@ namespace WebAddressbookTests
         public ContactHelper RemoveAllContactsFromList()
         {
             manager.Navigator.OpenHomePage();
-            if (! IsContactPresent(1))
-            {
-                Create(new ContactData("", ""));
-            }
             SelectAllContacts();
             RemoveFromList();
             return this;
@@ -202,7 +131,7 @@ namespace WebAddressbookTests
 
         public ContactHelper OpenContactCard(int index)
         {
-            driver.FindElement(By.XPath("(//img[@alt='Details'])[" + index + "]")).Click();
+            driver.FindElement(By.XPath("(//img[@alt='Details'])[" + (index + 1) + "]")).Click();
             return this;
         }
 
@@ -221,7 +150,7 @@ namespace WebAddressbookTests
 
         public ContactHelper InitModifyContactFromList(int index)
         {
-            driver.FindElement(By.XPath("(//img[@alt='Edit'])[" + index + "]")).Click();
+            driver.FindElement(By.XPath("(//img[@alt='Edit'])[" + (index + 1) + "]")).Click();
             return this;
         }
 
@@ -239,13 +168,19 @@ namespace WebAddressbookTests
 
         public ContactHelper SelectGroupForAdd(string groupName)
         {
-            new SelectElement(driver.FindElement(By.Name("to_group"))).SelectByText(groupName); ;
+            new SelectElement(driver.FindElement(By.Name("to_group"))).SelectByText(groupName);
+            return this;
+        }
+
+        public ContactHelper ShowGroupContent(string groupName)
+        {
+            new SelectElement(driver.FindElement(By.Name("group"))).SelectByText(groupName);
             return this;
         }
 
         public ContactHelper SelectContact(int index)
         {
-            driver.FindElement(By.XPath("(//input[@name='selected[]'])[" + index + "]")).Click();
+            driver.FindElement(By.XPath("(//input[@name='selected[]'])[" + (index + 1) + "]")).Click();
             return this;
         }
 
@@ -304,25 +239,47 @@ namespace WebAddressbookTests
 
         public bool IsContactPresent(int index)
         {
-            return IsElementPresent(By.XPath("(//img[@alt='Edit'])[" + index + "]"));
-        }
-
-        public void ModifyFromList(int index, ContactData newData)
-        {
-            InitModifyContactFromList(index);
-            Modify(newData);
-        }
-
-        public void ModifyfromCard(int index, ContactData newData)
-        {
-            OpenContactCardForModify(index);
-            Modify(newData);
+            return IsElementPresent(By.XPath("(//img[@alt='Edit'])[" + (index + 1) + "]"));
         }
 
         public void RemoveFromCard(int index)
         {
             OpenContactCardForModify(index);
             RemoveContact();
+        }
+
+        public List<ContactData> GetContactList()
+        {
+            List<ContactData> contacts = new List<ContactData>();
+
+            manager.Navigator.OpenHomePage();
+            contacts = GetList(contacts);
+            return contacts;
+        }
+
+        public List<ContactData> GetGroupContent(string groupName)
+        {
+            List<ContactData> contacts = new List<ContactData>();
+
+            manager.Navigator.OpenHomePage();
+            ShowGroupContent(groupName);
+            contacts = GetList(contacts);
+            manager.Navigator.OpenHomePage();
+            return contacts;
+        }
+
+        public List<ContactData> GetList(List<ContactData> contacts)
+        {
+            ICollection<IWebElement> elements = driver.FindElements(By.CssSelector("tr[name=entry]"));
+            int i = 2;
+            foreach (IWebElement element in elements)
+            {
+                string firstName = element.FindElement(By.XPath("//table[@id='maintable']/tbody/tr[" + i + "]/td[3]")).Text;
+                string lastName = element.FindElement(By.XPath("//table[@id='maintable']/tbody/tr[" + i + "]/td[2]")).Text;
+                contacts.Add(new ContactData(firstName, lastName));
+                i++;
+            }
+            return contacts;
         }
     }
 }
