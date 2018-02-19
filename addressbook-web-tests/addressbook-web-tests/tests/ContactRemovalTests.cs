@@ -14,24 +14,18 @@ namespace WebAddressbookTests
         //удалить контакт, вызвано из карточки контакта
         public void ContactRemovalTest_RemoveFromCard()
         {
-            int index = 10;
+            int index = 0; //отсчет от 0; для упрощения проверки теста удалению будет подвергаться первый контакт
 
             List<ContactData> oldContacts = app.Contacts.GetContactList();
 
-            if (oldContacts.Count > 0)
+            if (oldContacts.Count == 0)
             {
-                if (! app.Contacts.IsContactPresent(index))
-                {
-                    index = 0;
-                }
-                app.Contacts.RemoveContactFromCard(index);
-                oldContacts.RemoveAt(index);
+                app.Contacts.Create(new ContactData("firstName", "lastName"));
+                oldContacts.Add(new ContactData("firstName", "lastName"));
             }
-            else
-            {
-                app.Contacts.Create(new ContactData("", ""));
-                app.Contacts.RemoveContactFromCard(0);
-            }                       
+
+            app.Contacts.RemoveContactFromCard(index);
+            oldContacts.RemoveAt(index);                     
 
             List<ContactData> newContacts = app.Contacts.GetContactList();
             oldContacts.Sort();
@@ -46,25 +40,18 @@ namespace WebAddressbookTests
         public void ContactRemovalTest_RemoveOne()
         {
             List<int> Index = new List<int>();
-            Index.Add(10);
+            Index.Add(0); //отсчет от 0; для упрощения проверки теста удалению будет подвергаться первый контакт
 
             List<ContactData> oldContacts = app.Contacts.GetContactList();
 
-            if (oldContacts.Count > 0)
+            if (oldContacts.Count == 0)
             {
-                if (!app.Contacts.IsContactPresent(Index[0]))
-                {
-                    Index[0] = 0;
-                }
-                app.Contacts.RemoveSelectedContactsFromList(Index);
-                oldContacts.RemoveAt(Index[0]);
+                app.Contacts.Create(new ContactData("firstName", "lastName"));
+                oldContacts.Add(new ContactData("firstName", "lastName"));
             }
-            else
-            {
-                app.Contacts.Create(new ContactData("", ""));
-                Index[0] = 0;
-                app.Contacts.RemoveSelectedContactsFromList(Index);
-            }
+
+            app.Contacts.RemoveSelectedContactsFromList(Index);
+            oldContacts.RemoveAt(Index[0]);
 
             List<ContactData> newContacts = app.Contacts.GetContactList();
             oldContacts.Sort();
@@ -79,43 +66,41 @@ namespace WebAddressbookTests
         public void ContactRemovalTest_RemoveSeveral()
         {
             List<int> Index = new List<int>();
+            Index.Add(2);
+            Index.Add(1);
             Index.Add(3);
-            Index.Add(4);
-            List<int> correctIndex = new List<int>();
 
-            List<ContactData> oldContacts_Before = app.Contacts.GetContactList();
-            List<ContactData> oldContacts_After = new List<ContactData>();
-            
-            if (oldContacts_Before.Count > 0)
+            List<ContactData> oldContacts_Before = app.Contacts.GetContactList(); //список контактов до удаления
+            List<ContactData> oldContacts_After = new List<ContactData>(); //список контактов после удаления
+
+            foreach (int i in Index)
             {
-                foreach (int i in Index)
+                if (!app.Contacts.IsContactPresent(i))
                 {
-                    if (app.Contacts.IsContactPresent(i))
+                    do
                     {
-                        correctIndex.Add(i);
+                        app.Contacts.Create(new ContactData("firstName" + i, "lastName" + i));
+                        oldContacts_Before.Add(new ContactData("firstName" + i, "lastName" + i));
                     }
-                }
-                if (correctIndex.Count == 0)
-                {
-                    correctIndex.Add(0);
-                }
-
-                app.Contacts.RemoveSelectedContactsFromList(correctIndex);
-
-                for (int i = 0; i < oldContacts_Before.Count; i++)
-                {
-                    if (!correctIndex.Contains(i))
-                    {
-                        oldContacts_After.Add(oldContacts_Before[i]);
-                    }
+                    while ((oldContacts_Before.Count - 1) != i);
+                    oldContacts_Before.Sort(); /*сортировка сделана потому, что после добавления нового контакта 
+                                        они автоматически сортируются по фамилии (видно в браузере),
+                                        и в дальнейшем после удаления списки oldContacts и newContacts могут разойтись из-за этой особенности*/
                 }
             }
-            else
+
+            app.Contacts.RemoveSelectedContactsFromList(Index);
+
+            /*После использования RemoveAt в списке происходит сдвиг элементов.
+            Поэтому чтобы правильно сформировать в oldContacts список оставшихся после удаления контактов,
+            перепишем в новый список те контакты, которые не запрашивались для удаления*/
+            for (int i = 0; i < oldContacts_Before.Count; i++)
             {
-                app.Contacts.Create(new ContactData("", ""));
-                correctIndex.Add(0);
-                app.Contacts.RemoveSelectedContactsFromList(correctIndex);
-            }                       
+                if (!Index.Contains(i))
+                {
+                    oldContacts_After.Add(oldContacts_Before[i]);
+                }
+            }                      
 
             List<ContactData> newContacts = app.Contacts.GetContactList();
             oldContacts_After.Sort();
@@ -131,7 +116,8 @@ namespace WebAddressbookTests
 
             if (oldContacts.Count == 0)
             {
-                app.Contacts.Create(new ContactData("", ""));
+                app.Contacts.Create(new ContactData("firstName", "lastName"));
+                oldContacts.Add(new ContactData("firstName", "lastName"));
             }
 
             app.Contacts.RemoveAllContactsFromList();

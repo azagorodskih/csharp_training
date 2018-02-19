@@ -25,25 +25,19 @@ namespace WebAddressbookTests
             contact.Work = "88442555555";
             contact.Email = "y.blinova@mail.ru";
             contact.Email2 = "Blinova@ems.ru";
-            int index = 10; //отсчет от 0
+            int index = 0; //отсчет от 0; для упрощения проверки теста модификации будет подвергаться первый контакт
 
             List<ContactData> oldContacts = app.Contacts.GetContactList();
 
-            if (oldContacts.Count > 0)
+            if (oldContacts.Count == 0)
             {
-                if (! app.Contacts.IsContactPresent(index))
-                {
-                    index = 0;
-                }
-                app.Contacts.ModifyFromList(index, contact);
-                oldContacts[index].Firstname = contact.Firstname;
-                oldContacts[index].Lastname = contact.Lastname;
+                app.Contacts.Create(new ContactData("firstName", "lastName"));
+                oldContacts.Add(new ContactData("firstName", "lastName"));
             }
-            else
-            {
-                app.Contacts.Create(contact);
-                oldContacts.Add(contact);
-            }                     
+
+            app.Contacts.ModifyFromList(index, contact);
+            oldContacts[index].Firstname = contact.Firstname;
+            oldContacts[index].Lastname = contact.Lastname;
 
             List<ContactData> newContacts = app.Contacts.GetContactList();
             oldContacts.Sort();
@@ -58,25 +52,19 @@ namespace WebAddressbookTests
         public void ContactModificationTest_EmptyData()
         {
             ContactData contact = new ContactData("", "");
-            int index = 10; //отсчет от 0
+            int index = 0; //отсчет от 0; для упрощения проверки теста модификации будет подвергаться первый контакт
 
             List<ContactData> oldContacts = app.Contacts.GetContactList();
 
-            if (oldContacts.Count > 0)
+            if (oldContacts.Count == 0)
             {
-                if (!app.Contacts.IsContactPresent(index))
-                {
-                    index = 0;
-                }
-                app.Contacts.ModifyFromList(index, contact);
-                oldContacts[index].Firstname = contact.Firstname;
-                oldContacts[index].Lastname = contact.Lastname;
+                app.Contacts.Create(new ContactData("firstName", "lastName"));
+                oldContacts.Add(new ContactData("firstName", "lastName"));
             }
-            else
-            {
-                app.Contacts.Create(contact);
-                oldContacts.Add(contact);
-            }
+
+            app.Contacts.ModifyFromList(index, contact);
+            oldContacts[index].Firstname = contact.Firstname;
+            oldContacts[index].Lastname = contact.Lastname;
 
             List<ContactData> newContacts = app.Contacts.GetContactList();
             oldContacts.Sort();
@@ -91,28 +79,20 @@ namespace WebAddressbookTests
         public void ContactModificationTest_AddToGroupOne()
         {
             List<int> Index = new List<int>();
-            Index.Add(1);
+            Index.Add(0); //отсчет от 0; для упрощения проверки теста модификации будет подвергаться первый контакт
             string groupName = "www";
 
             List<ContactData> oldContacts = app.Contacts.GetContactList();
             //List<ContactData> oldGroupContent = app.Contacts.GetGroupContent(groupName);
 
-            if (oldContacts.Count > 0)
+            if (oldContacts.Count == 0)
             {
-                if (! app.Contacts.IsContactPresent(Index[0]))
-                {
-                    Index[0] = 0;
-                }
-            }
-            else
-            {
-                ContactData contact = new ContactData("firstName", "lastName");
-                app.Contacts.Create(contact);
-                oldContacts.Add(contact);
-                Index[0] = 0;
+                app.Contacts.Create(new ContactData("firstName", "lastName"));
+                oldContacts.Add(new ContactData("firstName", "lastName"));
             }
 
             app.Contacts.AddSelectedContactsToGroup(Index, groupName);
+
             //if (!oldGroupContent.Contains(oldContacts[Index[0]]))
             //{
                 //oldGroupContent.Add(oldContacts[Index[0]]);
@@ -135,38 +115,32 @@ namespace WebAddressbookTests
         public void ContactModificationTest_AddToGroupSeveral()
         {
             List<int> Index = new List<int>();
-            Index.Add(8);
-            Index.Add(9);
-            Index.Add(10);
+            Index.Add(2);
+            Index.Add(1);
+            Index.Add(3);
             string groupName = "www";
             List<int> correctIndex = new List<int>();
 
             List<ContactData> oldContacts = app.Contacts.GetContactList();
             //List<ContactData> oldGroupContent = app.Contacts.GetGroupContent(groupName);
 
-            if (oldContacts.Count > 0)
+            foreach (int i in Index)
             {
-                foreach (int i in Index)
+                if (!app.Contacts.IsContactPresent(i))
                 {
-                    if (app.Contacts.IsContactPresent(i))
+                    do
                     {
-                        correctIndex.Add(i);
+                        app.Contacts.Create(new ContactData("firstName" + i, "lastName" + i));
+                        oldContacts.Add(new ContactData("firstName" + i, "lastName" + i));
                     }
+                    while ((oldContacts.Count - 1) != i);
+                    oldContacts.Sort(); /*сортировка сделана потому, что после добавления нового контакта 
+                                        они автоматически сортируются по фамилии (видно в браузере),
+                                        и в дальнейшем после модификации списки oldContacts и newContacts могут разойтись из-за этой особенности*/
                 }
-                if (correctIndex.Count == 0)
-                {
-                    correctIndex.Add(0);
-                }
-            }
-            else
-            {
-                ContactData contact = new ContactData("firstName", "lastName");
-                app.Contacts.Create(contact);
-                oldContacts.Add(contact);
-                correctIndex.Add(0);
             }
 
-            app.Contacts.AddSelectedContactsToGroup(correctIndex, groupName);
+            app.Contacts.AddSelectedContactsToGroup(Index, groupName);
             //oldGroupContent.Add(oldContacts[Index[0]]);
 
             List<ContactData> newContacts = app.Contacts.GetContactList();
@@ -185,19 +159,19 @@ namespace WebAddressbookTests
         //добавить все контакты в группу, вызвано из списка
         public void ContactModificationTest_AddToGroupAll()
         {
-            string groupName = "www";
+            string groupName = "nnn";
 
             List<ContactData> oldContacts = app.Contacts.GetContactList();
             //List<ContactData> oldGroupContent = app.Contacts.GetGroupContent(groupName);
 
             if (oldContacts.Count == 0)
             {
-                ContactData contact = new ContactData("firstName", "lastName");
-                app.Contacts.Create(contact);
-                oldContacts.Add(contact);
+                app.Contacts.Create(new ContactData("firstName", "lastName"));
+                oldContacts.Add(new ContactData("firstName", "lastName"));
             }
 
             app.Contacts.AddAllContactsToGroup(groupName);
+
             //foreach (ContactData contact in oldContacts)
             //{
             //    if (!oldGroupContent.Contains(contact))

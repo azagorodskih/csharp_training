@@ -15,26 +15,19 @@ namespace WebAddressbookTests
         public void GroupRemovalTest_RemoveOne()
         {
             List<int> Index = new List<int>();
-            Index.Add(1);
+            Index.Add(0); //отсчет от 0; для упрощения проверки теста удалению будет подвергаться первая группа
 
             List<GroupData> oldGroups = app.Groups.GetGroupList();
 
-            if (oldGroups.Count > 0)
+            if (oldGroups.Count == 0)
             {
-                if (! app.Groups.IsGroupPresent(Index[0]))
-                {
-                    Index[0] = 0;
-                }
-                app.Groups.RemoveGroup(Index);
-                oldGroups.RemoveAt(Index[0]);
-            }
-            else
-            {
-                app.Groups.Create(new GroupData(""));
-                Index[0] = 0;
-                app.Groups.RemoveGroup(Index);
+                app.Groups.Create(new GroupData("NAME"));
+                oldGroups.Add(new GroupData("NAME"));
             }
 
+            app.Groups.RemoveGroup(Index);
+            oldGroups.RemoveAt(Index[0]);
+            
             List<GroupData> newGroups = app.Groups.GetGroupList();
             oldGroups.Sort();
             newGroups.Sort();
@@ -49,43 +42,40 @@ namespace WebAddressbookTests
         {
             List<int> Index = new List<int>(); //общий список индексов, запрашиваемых к удалению
             Index.Add(2);
-            Index.Add(4);
             Index.Add(1);
-            List<int> correctIndex = new List<int>(); //список существующих индексов, запрашиваемых к удалению
-            List<GroupData> oldGroups_Before = app.Groups.GetGroupList(); //начальный список групп до удаления
-            List<GroupData> oldGroups_After = new List<GroupData>(); //начальный список групп после удаления
+            Index.Add(3);
+            List<GroupData> oldGroups_Before = app.Groups.GetGroupList(); //список групп до удаления
+            List<GroupData> oldGroups_After = new List<GroupData>(); //список групп после удаления
 
-            if (oldGroups_Before.Count > 0)
+            foreach (int i in Index)
             {
-                foreach (int i in Index)
+                if (!app.Groups.IsGroupPresent(i))
                 {
-                    if (app.Groups.IsGroupPresent(i))
+                    do
                     {
-                        correctIndex.Add(i);
+                        app.Groups.Create(new GroupData("NAME" + i));
+                        oldGroups_Before.Add(new GroupData("NAME" + i));
                     }
-                }
-                if (correctIndex.Count == 0)
-                {
-                    correctIndex.Add(0);
-                }
-
-                app.Groups.RemoveGroup(correctIndex);
-                
-                for(int i = 0; i < oldGroups_Before.Count; i++)
-                {
-                    if (! correctIndex.Contains(i))
-                    {
-                        oldGroups_After.Add(oldGroups_Before[i]);
-                    }
+                    while ((oldGroups_Before.Count - 1) != i);
+                    oldGroups_Before.Sort(); /*сортировка сделана потому, что после добавления новой группы 
+                                        они автоматически сортируются по фамилии (видно в браузере),
+                                        и в дальнейшем после удаления списки oldGroups и newGroups могут разойтись из-за этой особенности*/
                 }
             }
-            else
+
+            app.Groups.RemoveGroup(Index);
+
+            /*После использования RemoveAt в списке происходит сдвиг элементов.
+            Поэтому чтобы правильно сформировать в oldGroups список оставшихся после удаления групп,
+            перепишем в новый список те группы, которые не запрашивались для удаления*/
+            for (int i = 0; i < oldGroups_Before.Count; i++)
             {
-                app.Groups.Create(new GroupData(""));
-                correctIndex.Add(0);
-                app.Groups.RemoveGroup(correctIndex);
+                if (!Index.Contains(i))
+                {
+                    oldGroups_After.Add(oldGroups_Before[i]);
+                }
             }
-            
+
             List<GroupData> newGroups = app.Groups.GetGroupList();
             oldGroups_After.Sort();
             newGroups.Sort();

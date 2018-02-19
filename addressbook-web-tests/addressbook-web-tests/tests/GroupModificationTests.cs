@@ -17,24 +17,18 @@ namespace WebAddressbookTests
             GroupData newData = new GroupData("mmm");
             newData.Header = "nnn";
             newData.Footer = "ooo";
-            int index = 5; //отсчет от 0
+            int index = 0; //отсчет от 0; для упрощения проверки теста модификации будет подвергаться первая группа
 
             List<GroupData> oldGroups = app.Groups.GetGroupList();
 
-            if(oldGroups.Count > 0)
+            if(oldGroups.Count == 0)
             {
-                if(! app.Groups.IsGroupPresent(index))
-                {
-                    index = 0;
-                }
-                app.Groups.Modify(index, newData);
-                oldGroups[index].Name = newData.Name;
+                app.Groups.Create(new GroupData("NAME"));
+                oldGroups.Add(new GroupData("NAME"));
             }
-            else
-            {
-                app.Groups.Create(newData);
-                oldGroups.Add(newData);
-            }
+
+            app.Groups.Modify(index, newData);
+            oldGroups[index].Name = newData.Name;
 
             List<GroupData> newGroups = app.Groups.GetGroupList();
             //oldGroups[index].Name = newData.Name;
@@ -52,24 +46,18 @@ namespace WebAddressbookTests
             GroupData emptyData = new GroupData("");
             emptyData.Header = "";
             emptyData.Footer = "";
-            int index = 1; //отсчет от 0
+            int index = 0; //отсчет от 0; для упрощения проверки теста модификации будет подвергаться первая группа
 
             List<GroupData> oldGroups = app.Groups.GetGroupList();
 
-            if (oldGroups.Count > 0)
+            if (oldGroups.Count == 0)
             {
-                if (! app.Groups.IsGroupPresent(index))
-                {
-                    index = 0;
-                }
-                app.Groups.Modify(index, emptyData);
-                oldGroups[index].Name = emptyData.Name;
+                app.Groups.Create(new GroupData("NAME"));
+                oldGroups.Add(new GroupData("NAME"));
             }
-            else
-            {
-                app.Groups.Create(emptyData);
-                oldGroups.Add(emptyData);
-            }
+
+            app.Groups.Modify(index, emptyData);
+            oldGroups[index].Name = emptyData.Name;
 
             List<GroupData> newGroups = app.Groups.GetGroupList();
             //oldGroups[index].Name = newData.Name;
@@ -87,24 +75,32 @@ namespace WebAddressbookTests
             GroupData newData = new GroupData("bbb");
             newData.Header = null;
             newData.Footer = null;
-            int index = 5; //отсчет от 0
+            int index = 0; //отсчет от 0; для упрощения проверки теста модификации будет подвергаться первая группа
 
             List<GroupData> oldGroups = app.Groups.GetGroupList();
 
-            if (oldGroups.Count > 0)
+            //if (!app.Groups.IsGroupPresent(index))
+            //{
+            //    GroupData defGroup = new GroupData("NAME");
+            //    do
+            //    {
+            //        app.Groups.Create(defGroup);
+            //        oldGroups.Add(defGroup);
+            //    }
+            //    while ((oldGroups.Count - 1) != index);
+            //    oldGroups.Sort(); /*сортировка сделана потому, что после добавления новой группы 
+            //                        они автоматически сортируются по наименованию (видно в браузере),
+            //                        и в дальнейшем после модификации списки oldGroups и newGroups могут разойтись из-за этой особенности*/
+            //}
+
+            if (oldGroups.Count == 0)
             {
-                if (! app.Groups.IsGroupPresent(index))
-                {
-                    index = 0;
-                }
-                app.Groups.Modify(index, newData);
-                oldGroups[index].Name = newData.Name;
+                app.Groups.Create(new GroupData("NAME"));
+                oldGroups.Add(new GroupData("NAME"));
             }
-            else
-            {
-                app.Groups.Create(newData);
-                oldGroups.Add(newData);
-            }
+
+            app.Groups.Modify(index, newData);
+            oldGroups[index].Name = newData.Name;
 
             List<GroupData> newGroups = app.Groups.GetGroupList();
             //oldGroups[index].Name = newData.Name;
