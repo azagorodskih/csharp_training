@@ -22,16 +22,25 @@ namespace WebAddressbookTests
             if (oldGroups.Count == 0)
             {
                 app.Groups.Create(new GroupData("NAME"));
-                oldGroups.Add(new GroupData("NAME"));
+                //oldGroups.Add(new GroupData("NAME"));
+                oldGroups = app.Groups.GetGroupList(); //чтобы также узнать идентификатор созданной группы
             }
 
-            app.Groups.RemoveGroup(Index);
+            app.Groups.Remove(Index);
+            GroupData toBeRemoved = oldGroups[Index[0]];
             oldGroups.RemoveAt(Index[0]);
-            
+
+            //Assert.AreEqual(oldGroups.Count, app.Groups.GetGroupCount());
+
             List<GroupData> newGroups = app.Groups.GetGroupList();
             oldGroups.Sort();
             newGroups.Sort();
             Assert.AreEqual(oldGroups, newGroups);
+
+            foreach (GroupData group in newGroups)
+            {
+                Assert.AreNotEqual(group.Id, toBeRemoved.Id);
+            }
 
             //app.Auth.Logout();
         }
@@ -47,6 +56,7 @@ namespace WebAddressbookTests
             List<GroupData> oldGroups_Before = app.Groups.GetGroupList(); //список групп до удаления
             List<GroupData> oldGroups_After = new List<GroupData>(); //список групп после удаления
 
+            int groupCount = oldGroups_Before.Count;
             foreach (int i in Index)
             {
                 if (!app.Groups.IsGroupPresent(i))
@@ -54,16 +64,18 @@ namespace WebAddressbookTests
                     do
                     {
                         app.Groups.Create(new GroupData("NAME" + i));
-                        oldGroups_Before.Add(new GroupData("NAME" + i));
+                        //oldGroups_Before.Add(new GroupData("NAME" + i));
+                        groupCount++;
                     }
-                    while ((oldGroups_Before.Count - 1) != i);
-                    oldGroups_Before.Sort(); /*сортировка сделана потому, что после добавления новой группы 
+                    while ((groupCount - 1) != i);
+                    /*oldGroups_Before.Sort(); /*сортировка сделана потому, что после добавления новой группы 
                                         они автоматически сортируются по фамилии (видно в браузере),
                                         и в дальнейшем после удаления списки oldGroups и newGroups могут разойтись из-за этой особенности*/
                 }
             }
+            oldGroups_Before = app.Groups.GetGroupList(); //чтобы также узнать идентификатор созданной группы
 
-            app.Groups.RemoveGroup(Index);
+            app.Groups.Remove(Index);
 
             /*После использования RemoveAt в списке происходит сдвиг элементов.
             Поэтому чтобы правильно сформировать в oldGroups список оставшихся после удаления групп,
@@ -76,10 +88,17 @@ namespace WebAddressbookTests
                 }
             }
 
+            //Assert.AreEqual(oldGroups_After.Count, app.Groups.GetGroupCount());
+
             List<GroupData> newGroups = app.Groups.GetGroupList();
             oldGroups_After.Sort();
             newGroups.Sort();
             Assert.AreEqual(oldGroups_After, newGroups);
+
+            for (int i = 0; i < newGroups.Count; i++)
+            {
+                Assert.AreEqual(newGroups[i].Id, oldGroups_After[i].Id);
+            }
 
             //app.Auth.Logout();
         }

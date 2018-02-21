@@ -114,6 +114,7 @@ namespace WebAddressbookTests
         public ContactHelper SubmitContactCreation()
         {
             driver.FindElement(By.Name("submit")).Click();
+            contactCash = null;
             return this;
         }
 
@@ -126,6 +127,8 @@ namespace WebAddressbookTests
         public ContactHelper SubmitContactModification()
         {
             driver.FindElement(By.Name("update")).Click();
+            contactCash = null;
+            groupcontentCash = null;
             return this;
         }
 
@@ -163,6 +166,7 @@ namespace WebAddressbookTests
         public ContactHelper SubmitAddToGroup()
         {
             driver.FindElement(By.Name("add")).Click();
+            groupcontentCash = null;
             return this;
         }
 
@@ -197,6 +201,8 @@ namespace WebAddressbookTests
                 //driver.SwitchTo().Alert() = доступ к появившемуся диалоговому окну
                 //Accept() = нажатие на кнопку ОК
                 driver.SwitchTo().Alert().Accept();
+                contactCash = null;
+                groupcontentCash = null;
             }
             catch (NoAlertPresentException)
             {
@@ -206,9 +212,19 @@ namespace WebAddressbookTests
             return this;
         }
 
-        public ContactHelper RemoveContact()
+        /*так как кнопка для удаления контакта из карточки и из списка имеет одинаковое название,
+        то для удаления используется один метод, но необходимость очистки кеша определяется по флагу fromCard.
+        При удалении контакта из карточки, он удаляется сразу, поэтому кеш также можно сразу очистить.
+        При удалении контакта из списка, свои действия необходимо подтвердить; 
+        очистка кеша в этом случае происходит в методе SubmitContactRemoval()*/
+        public ContactHelper RemoveContact(bool fromCard)
         {
             driver.FindElement(By.XPath("//input[@value='Delete']")).Click();
+            if (fromCard)
+            {
+                contactCash = null;
+                groupcontentCash = null;
+            }
             return this;
         }
 
@@ -231,7 +247,7 @@ namespace WebAddressbookTests
 
         public ContactHelper RemoveFromList()
         {
-            RemoveContact();
+            RemoveContact(false);
             SubmitContactRemoval();
             //ReturnToHomePage();
             return this;
@@ -245,41 +261,52 @@ namespace WebAddressbookTests
         public void RemoveFromCard(int index)
         {
             OpenContactCardForModify(index);
-            RemoveContact();
+            RemoveContact(true);
         }
+
+        private List<ContactData> contactCash = null;
+        private List<ContactData> groupcontentCash = null;
 
         public List<ContactData> GetContactList()
         {
-            List<ContactData> contacts = new List<ContactData>();
+            if (contactCash == null)
+            {
+                contactCash = new List<ContactData>();
+                manager.Navigator.OpenHomePage();
+                contactCash = GetList(contactCash);
+            }
 
-            manager.Navigator.OpenHomePage();
-            contacts = GetList(contacts);
-            return contacts;
-        }
-
-        public List<ContactData> GetGroupContent(string groupName)
-        {
-            List<ContactData> contacts = new List<ContactData>();
-
-            manager.Navigator.OpenHomePage();
-            ShowGroupContent(groupName);
-            contacts = GetList(contacts);
-            manager.Navigator.OpenHomePage();
-            return contacts;
+            return new List<ContactData>(contactCash);
         }
 
         public List<ContactData> GetList(List<ContactData> contacts)
         {
             ICollection<IWebElement> elements = driver.FindElements(By.CssSelector("tr[name=entry]"));
-            int i = 2;
             foreach (IWebElement element in elements)
             {
-                string firstName = element.FindElement(By.XPath("//table[@id='maintable']/tbody/tr[" + i + "]/td[3]")).Text;
-                string lastName = element.FindElement(By.XPath("//table[@id='maintable']/tbody/tr[" + i + "]/td[2]")).Text;
-                contacts.Add(new ContactData(firstName, lastName));
-                i++;
+                //string firstName = element.FindElement(By.XPath("./td[3]")).Text;
+                //string lastName = element.FindElement(By.XPath("./td[2]")).Text;
+                //contacts.Add(new ContactData(firstName, lastName));
+
+                contacts.Add(new ContactData(element.FindElement(By.XPath("./td[3]")).Text,
+                    element.FindElement(By.XPath("./td[2]")).Text) {
+                    Id = element.FindElement(By.TagName("input")).GetAttribute("value") });
             }
             return contacts;
+        }
+
+        public List<ContactData> GetGroupContent(string groupName)
+        {
+            if (groupcontentCash == null)
+            {
+                groupcontentCash = new List<ContactData>();
+                manager.Navigator.OpenHomePage();
+                ShowGroupContent(groupName);
+                groupcontentCash = GetList(groupcontentCash);
+                manager.Navigator.OpenHomePage();
+            }
+
+            return new List<ContactData>(groupcontentCash);
         }
     }
 }

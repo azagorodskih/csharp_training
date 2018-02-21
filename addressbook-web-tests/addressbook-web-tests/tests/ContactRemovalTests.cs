@@ -21,16 +21,23 @@ namespace WebAddressbookTests
             if (oldContacts.Count == 0)
             {
                 app.Contacts.Create(new ContactData("firstName", "lastName"));
-                oldContacts.Add(new ContactData("firstName", "lastName"));
+                //oldContacts.Add(new ContactData("firstName", "lastName"));
+                oldContacts = app.Contacts.GetContactList(); //чтобы также узнать идентификатор созданного контакта
             }
 
             app.Contacts.RemoveContactFromCard(index);
+            ContactData toBeRemoved = oldContacts[index];
             oldContacts.RemoveAt(index);                     
 
             List<ContactData> newContacts = app.Contacts.GetContactList();
             oldContacts.Sort();
             newContacts.Sort();
             Assert.AreEqual(oldContacts, newContacts);
+
+            foreach (ContactData contact in newContacts)
+            {
+                Assert.AreNotEqual(contact.Id, toBeRemoved.Id);
+            }
 
             //app.Auth.Logout();
         }
@@ -47,16 +54,23 @@ namespace WebAddressbookTests
             if (oldContacts.Count == 0)
             {
                 app.Contacts.Create(new ContactData("firstName", "lastName"));
-                oldContacts.Add(new ContactData("firstName", "lastName"));
+                //oldContacts.Add(new ContactData("firstName", "lastName"));
+                oldContacts = app.Contacts.GetContactList(); //чтобы также узнать идентификатор созданного контакта
             }
 
             app.Contacts.RemoveSelectedContactsFromList(Index);
+            ContactData toBeRemoved = oldContacts[Index[0]];
             oldContacts.RemoveAt(Index[0]);
 
             List<ContactData> newContacts = app.Contacts.GetContactList();
             oldContacts.Sort();
             newContacts.Sort();
             Assert.AreEqual(oldContacts, newContacts);
+
+            foreach (ContactData contact in newContacts)
+            {
+                Assert.AreNotEqual(contact.Id, toBeRemoved.Id);
+            }
 
             //app.Auth.Logout();
         }
@@ -73,6 +87,7 @@ namespace WebAddressbookTests
             List<ContactData> oldContacts_Before = app.Contacts.GetContactList(); //список контактов до удаления
             List<ContactData> oldContacts_After = new List<ContactData>(); //список контактов после удаления
 
+            int contactCount = oldContacts_Before.Count;
             foreach (int i in Index)
             {
                 if (!app.Contacts.IsContactPresent(i))
@@ -80,14 +95,16 @@ namespace WebAddressbookTests
                     do
                     {
                         app.Contacts.Create(new ContactData("firstName" + i, "lastName" + i));
-                        oldContacts_Before.Add(new ContactData("firstName" + i, "lastName" + i));
+                        //oldContacts_Before.Add(new ContactData("firstName" + i, "lastName" + i));
+                        contactCount++;
                     }
-                    while ((oldContacts_Before.Count - 1) != i);
-                    oldContacts_Before.Sort(); /*сортировка сделана потому, что после добавления нового контакта 
+                    while ((contactCount - 1) != i);
+                    /*oldContacts_Before.Sort(); /*сортировка сделана потому, что после добавления нового контакта 
                                         они автоматически сортируются по фамилии (видно в браузере),
                                         и в дальнейшем после удаления списки oldContacts и newContacts могут разойтись из-за этой особенности*/
                 }
             }
+            oldContacts_Before = app.Contacts.GetContactList();
 
             app.Contacts.RemoveSelectedContactsFromList(Index);
 
@@ -106,6 +123,11 @@ namespace WebAddressbookTests
             oldContacts_After.Sort();
             newContacts.Sort();
             Assert.AreEqual(oldContacts_After, newContacts);
+
+            for (int i = 0; i < newContacts.Count; i++)
+            {
+                Assert.AreEqual(newContacts[i].Id, oldContacts_After[i].Id);
+            }
         }
 
         [Test]
@@ -117,7 +139,8 @@ namespace WebAddressbookTests
             if (oldContacts.Count == 0)
             {
                 app.Contacts.Create(new ContactData("firstName", "lastName"));
-                oldContacts.Add(new ContactData("firstName", "lastName"));
+                //oldContacts.Add(new ContactData("firstName", "lastName"));
+                oldContacts = app.Contacts.GetContactList();
             }
 
             app.Contacts.RemoveAllContactsFromList();
@@ -127,6 +150,10 @@ namespace WebAddressbookTests
             oldContacts.Sort();
             newContacts.Sort();
             Assert.AreEqual(oldContacts, newContacts);
+            /*так как в результате этого теста должны удалиться все контакты,
+             то сравнивать идентификаторы не будем; убедимся, что оба списка пусты*/
+            Assert.AreEqual(0, oldContacts.Count);
+            Assert.AreEqual(0, newContacts.Count);
 
             //app.Auth.Logout();
         }

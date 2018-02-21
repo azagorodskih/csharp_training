@@ -24,17 +24,29 @@ namespace WebAddressbookTests
             if(oldGroups.Count == 0)
             {
                 app.Groups.Create(new GroupData("NAME"));
-                oldGroups.Add(new GroupData("NAME"));
+                //oldGroups.Add(new GroupData("NAME"));
+                oldGroups = app.Groups.GetGroupList(); //чтобы также узнать идентификатор созданной группы
             }
 
             app.Groups.Modify(index, newData);
+            GroupData toBeModified = oldGroups[index];
             oldGroups[index].Name = newData.Name;
+
+            //Assert.AreEqual(oldGroups.Count, app.Groups.GetGroupCount());
 
             List<GroupData> newGroups = app.Groups.GetGroupList();
             //oldGroups[index].Name = newData.Name;
             oldGroups.Sort();
             newGroups.Sort();
             Assert.AreEqual(oldGroups, newGroups);
+
+            foreach (GroupData group in newGroups)
+            {
+                if (group.Id == toBeModified.Id)
+                {
+                    Assert.AreEqual(newData.Name, group.Name);
+                }
+            }
 
             //app.Auth.Logout();
         }
@@ -53,17 +65,29 @@ namespace WebAddressbookTests
             if (oldGroups.Count == 0)
             {
                 app.Groups.Create(new GroupData("NAME"));
-                oldGroups.Add(new GroupData("NAME"));
+                //oldGroups.Add(new GroupData("NAME"));
+                oldGroups = app.Groups.GetGroupList(); //чтобы также узнать идентификатор созданной группы
             }
 
             app.Groups.Modify(index, emptyData);
+            GroupData toBeModified = oldGroups[index];
             oldGroups[index].Name = emptyData.Name;
+
+            //Assert.AreEqual(oldGroups.Count, app.Groups.GetGroupCount());
 
             List<GroupData> newGroups = app.Groups.GetGroupList();
             //oldGroups[index].Name = newData.Name;
             oldGroups.Sort();
             newGroups.Sort();
             Assert.AreEqual(oldGroups, newGroups);
+
+            foreach (GroupData group in newGroups)
+            {
+                if (group.Id == toBeModified.Id)
+                {
+                    Assert.AreEqual(emptyData.Name, group.Name);
+                }
+            }
 
             //app.Auth.Logout();
         }
@@ -79,35 +103,33 @@ namespace WebAddressbookTests
 
             List<GroupData> oldGroups = app.Groups.GetGroupList();
 
-            //if (!app.Groups.IsGroupPresent(index))
-            //{
-            //    GroupData defGroup = new GroupData("NAME");
-            //    do
-            //    {
-            //        app.Groups.Create(defGroup);
-            //        oldGroups.Add(defGroup);
-            //    }
-            //    while ((oldGroups.Count - 1) != index);
-            //    oldGroups.Sort(); /*сортировка сделана потому, что после добавления новой группы 
-            //                        они автоматически сортируются по наименованию (видно в браузере),
-            //                        и в дальнейшем после модификации списки oldGroups и newGroups могут разойтись из-за этой особенности*/
-            //}
-
             if (oldGroups.Count == 0)
             {
                 app.Groups.Create(new GroupData("NAME"));
                 oldGroups.Add(new GroupData("NAME"));
+                oldGroups = app.Groups.GetGroupList(); //чтобы также узнать идентификатор созданной группы
             }
 
             app.Groups.Modify(index, newData);
+            GroupData toBeModified = oldGroups[index];
             oldGroups[index].Name = newData.Name;
+
+            //Assert.AreEqual(oldGroups.Count, app.Groups.GetGroupCount());
 
             List<GroupData> newGroups = app.Groups.GetGroupList();
             //oldGroups[index].Name = newData.Name;
             oldGroups.Sort();
             newGroups.Sort();
             Assert.AreEqual(oldGroups, newGroups);
-            
+
+            foreach (GroupData group in newGroups)
+            {
+                if (group.Id == toBeModified.Id)
+                {
+                    Assert.AreEqual(newData.Name, group.Name);
+                }
+            }
+
             //app.Auth.Logout();
         }
     }
