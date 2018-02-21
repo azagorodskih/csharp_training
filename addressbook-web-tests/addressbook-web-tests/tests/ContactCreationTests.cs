@@ -14,17 +14,20 @@ namespace WebAddressbookTests
         //заполнить все поля
         public void ContactCreationTest_AllFields()
         {
-            ContactData contact = new ContactData("Ilya", "Koblikov");
-            contact.Middlename = "A.";
-            contact.Nickname = "ikoblikov";
-            contact.Title = "Test Manager";
-            contact.Company = "VSK";
-            contact.Address = "Volgograd, Lenina av., 54";
-            contact.Home = "88442051430";
-            contact.Mobile = "89173256927";
-            contact.Work = "88442281940";
-            contact.Email = "ikoblikov@yandex.ru";
-            contact.Email2 = "Koblikov@vsk.ru";
+            ContactData contact = new ContactData("Ilya", "Koblikov")
+            {
+                Middlename = "A.",
+                Nickname = "ikoblikov",
+                Title = "Test Manager",
+                Company = "VSK",
+                Address = "Volgograd, Lenina av., 54",
+                Home = "88442051430",
+                Mobile = "89173256927",
+                Work = "88442281940",
+                Email = "ikoblikov@yandex.ru",
+                Email2 = "Koblikov@vsk.ru",
+                Email3 = "i.koblikov@mail.ru"
+            };
 
             List<ContactData> oldContacts = app.Contacts.GetContactList();
 
@@ -43,8 +46,10 @@ namespace WebAddressbookTests
         //заполнить только поля для ФИО
         public void ContactCreationTest_OnlyFIOFields()
         {
-            ContactData contact = new ContactData("Maxim", "Bokov");
-            contact.Middlename = "N.";
+            ContactData contact = new ContactData("Maxim", "Bokov")
+            {
+                Middlename = "N."
+            };
 
             List<ContactData> oldContacts = app.Contacts.GetContactList();
 

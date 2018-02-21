@@ -14,9 +14,11 @@ namespace WebAddressbookTests
         //заполнить все поля
         public void GroupCreationTest_AllFields()
         {
-            GroupData group = new GroupData("aaa");
-            group.Header = "bbb";
-            group.Footer = "ccc";
+            GroupData group = new GroupData("aaa")
+            {
+                Header = "bbb",
+                Footer = "ccc"
+            };
 
             List<GroupData> oldGroups = app.Groups.GetGroupList();
 
@@ -37,9 +39,11 @@ namespace WebAddressbookTests
         //оставить все поля пустыми
         public void GroupCreationTest_EmptyFields()
         {
-            GroupData group = new GroupData("");
-            group.Header = "";
-            group.Footer = "";
+            GroupData group = new GroupData("")
+            {
+                Header = "",
+                Footer = ""
+            };
 
             List<GroupData> oldGroups = app.Groups.GetGroupList();
 
@@ -60,9 +64,11 @@ namespace WebAddressbookTests
         //заполнить поля спецсимволами
         public void GroupCreationTest_SpecCharFields()
         {
-            GroupData group = new GroupData("$$$");
-            group.Header = "***";
-            group.Footer = "&&&";
+            GroupData group = new GroupData("$$$")
+            {
+                Header = "***",
+                Footer = "&&&"
+            };
 
             List<GroupData> oldGroups = app.Groups.GetGroupList();
 
@@ -79,27 +85,27 @@ namespace WebAddressbookTests
             //app.Auth.Logout();
         }
 
-        [Test]
+        //[Test]
         //заполнить все поля
-        public void GroupCreationTest_BadName()
-        {
-            GroupData group = new GroupData("a'a");
-            group.Header = "bbb";
-            group.Footer = "ccc";
+        //public void GroupCreationTest_BadName()
+        //{
+        //    GroupData group = new GroupData("a'a");
+        //    group.Header = "bbb";
+        //    group.Footer = "ccc";
 
-            List<GroupData> oldGroups = app.Groups.GetGroupList();
+        //    List<GroupData> oldGroups = app.Groups.GetGroupList();
 
-            app.Groups.Create(group);
+        //    app.Groups.Create(group);
 
-            //Assert.AreEqual(oldGroups.Count + 1, app.Groups.GetGroupCount());
+        //    //Assert.AreEqual(oldGroups.Count + 1, app.Groups.GetGroupCount());
 
-            List<GroupData> newGroups = app.Groups.GetGroupList();
-            oldGroups.Add(group);
-            oldGroups.Sort();
-            newGroups.Sort();
-            Assert.AreEqual(oldGroups, newGroups);
+        //    List<GroupData> newGroups = app.Groups.GetGroupList();
+        //    oldGroups.Add(group);
+        //    oldGroups.Sort();
+        //    newGroups.Sort();
+        //    Assert.AreEqual(oldGroups, newGroups);
 
-            //app.Auth.Logout();
-        }
+        //    //app.Auth.Logout();
+        //}
     }
 }

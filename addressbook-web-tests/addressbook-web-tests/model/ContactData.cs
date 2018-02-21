@@ -8,6 +8,9 @@ namespace WebAddressbookTests
 {
     public class ContactData : IEquatable<ContactData>, IComparable<ContactData>
     {
+        private string allPhones;
+        private string allEmails;
+
         public ContactData(string firstname, string lastname)
         {
             Firstname = firstname;
@@ -34,11 +37,75 @@ namespace WebAddressbookTests
 
         public string Work { get; set; }
 
+        public string AllPhones
+        {
+            get
+            {
+                if (allPhones != null)
+                {
+                    return allPhones;
+                }
+                else
+                {
+                    return (CleanUpPhone(Home) + CleanUpPhone(Mobile) + CleanUpPhone(Work)).Trim();
+                }
+            }
+            set
+            {
+                allPhones = value;
+            }
+        }
+
         public string Email { get; set; }
 
         public string Email2 { get; set; }
 
+        public string Email3 { get; set; }
+
+        public string AllEmails
+        {
+            get
+            {
+                if(allEmails != null)
+                {
+                    return allEmails;
+                }
+                else
+                {
+                    return (CleanUpEmail(Email) + CleanUpEmail(Email2) + CleanUpEmail(Email3)).Trim();
+                }
+            }
+            set
+            {
+                allEmails = value;
+            }
+        }
+
         public string Id { get; set; }
+
+        public string CleanUpPhone(string phone)
+        {
+            if(phone == null || phone == "")
+            {
+                return "";
+            }
+            else
+            {
+                return phone.Replace(" ", "").Replace("-", "").Replace("(", "").Replace(")", "") + "\r\n";
+            }
+        }
+
+        public string CleanUpEmail(string email)
+        {
+            if (email == null || email == "")
+            {
+                return "";
+            }
+            else
+            {
+                return email.Replace(" ", "") + "\r\n";
+            }
+        }
 
         public bool Equals(ContactData other)
         {
