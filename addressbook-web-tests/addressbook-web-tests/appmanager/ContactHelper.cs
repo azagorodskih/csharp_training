@@ -117,6 +117,11 @@ namespace WebAddressbookTests
             };
         }
 
+        //public ContactData GetContactInfoFromCard(ContactData contact)
+        //{
+            
+        //}
+
         public ContactData GetContactInfoFromList(int index)
         {
             manager.Navigator.OpenHomePage();
