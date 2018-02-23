@@ -43,7 +43,7 @@ namespace WebAddressbookTests
             return groups;
         }
 
-        [Test, TestCaseSource("RandomGroupDataProvider")]
+        [Test, TestCaseSource("GroupDataFromFile")]
         //заполнить все поля
         public void GroupCreationTest_AllFields(GroupData group)
         {
