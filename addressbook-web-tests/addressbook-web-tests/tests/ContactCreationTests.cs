@@ -4,18 +4,23 @@ using System.Text.RegularExpressions;
 using System.Threading;
 using NUnit.Framework;
 using System.Collections.Generic;
+using System.IO;
+using System.Xml;
+using System.Xml.Serialization;
+using Newtonsoft.Json;
 
 namespace WebAddressbookTests
 {
     [TestFixture]
     public class ContactCreationTests : AuthTestBase
     {
+        //генератор случайных строк
         public static IEnumerable<ContactData> RandomContactDataProvider()
         {
-            List<ContactData> groups = new List<ContactData>();
+            List<ContactData> contacts = new List<ContactData>();
             for (int i = 0; i < 3; i++)
             {
-                groups.Add(new ContactData(GenerateRandomString(30), GenerateRandomString(30))
+                contacts.Add(new ContactData(GenerateRandomString(30), GenerateRandomString(30))
                 {
                     Middlename = GenerateRandomString(30),
                     Nickname = GenerateRandomString(20),
@@ -31,12 +36,27 @@ namespace WebAddressbookTests
                 });
             }
 
-            return groups;
+            return contacts;
         }
 
-        [Test, TestCaseSource("RandomContactDataProvider")]
-        //заполнить все поля
-        public void ContactCreationTest_AllFields(ContactData contact)
+        //чтение данных из файла .xml
+        public static IEnumerable<ContactData> ContactDataFromXmlFile()
+        {
+            return (List<ContactData>)
+                new XmlSerializer(typeof(List<ContactData>))
+                .Deserialize(new StreamReader(@"contacts.xml"));
+        }
+
+        //чтение данных из файла .json
+        public static IEnumerable<ContactData> ContactDataFromJsonFile()
+        {
+            return JsonConvert.DeserializeObject<List<ContactData>>(
+                File.ReadAllText(@"contacts.json"));
+        }
+
+        //заполнить все поля; данные из файла .xml
+        [Test, TestCaseSource("ContactDataFromXmlFile")]
+        public void ContactCreationTest_AllFieldsXml(ContactData contact)
         {
             //ContactData contact = new ContactData("Ilya", "Koblikov")
             //{
@@ -64,6 +84,21 @@ namespace WebAddressbookTests
             Assert.AreEqual(oldContacts, newContacts);
 
             //app.Auth.Logout();
+        }
+
+        //заполнить все поля; данные из файла .json
+        [Test, TestCaseSource("ContactDataFromJsonFile")]
+        public void ContactCreationTest_AllFieldsJson(ContactData contact)
+        {
+            List<ContactData> oldContacts = app.Contacts.GetContactList();
+
+            app.Contacts.Create(contact);
+            oldContacts.Add(contact);
+
+            List<ContactData> newContacts = app.Contacts.GetContactList();
+            oldContacts.Sort();
+            newContacts.Sort();
+            Assert.AreEqual(oldContacts, newContacts);
         }
 
         //[Test]

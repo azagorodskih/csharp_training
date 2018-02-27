@@ -7,12 +7,14 @@ using System.Collections.Generic;
 using System.IO;
 using System.Xml;
 using System.Xml.Serialization;
+using Newtonsoft.Json;
 
 namespace WebAddressbookTests
 {
     [TestFixture]
     public class GroupCreationTests : AuthTestBase
     {
+        //генератор случайных строк
         public static IEnumerable<GroupData> RandomGroupDataProvider()
         {
             List<GroupData> groups = new List<GroupData>();
@@ -28,6 +30,7 @@ namespace WebAddressbookTests
             return groups;
         }
 
+        //чтение данных из файла .csv
         public static IEnumerable<GroupData> GroupDataFromCsvFile()
         {
             List<GroupData> groups = new List<GroupData>();
@@ -45,6 +48,7 @@ namespace WebAddressbookTests
             return groups;
         }
 
+        //чтение данных из файла .xml
         public static IEnumerable<GroupData> GroupDataFromXmlFile()
         {
             return (List<GroupData>) 
@@ -52,9 +56,22 @@ namespace WebAddressbookTests
                 .Deserialize(new StreamReader(@"groups.xml"));
         }
 
+        //чтение данных из файла .json
+        public static IEnumerable<GroupData> GroupDataFromJsonFile()
+        {
+            return JsonConvert.DeserializeObject<List<GroupData>>(
+                File.ReadAllText(@"groups.json"));
+        }
+
+        //чтение данных из файла .xls
+        //public static IEnumerable<GroupData> GroupDataFromXlsFile()
+        //{
+
+        //}
+
+        //заполнить все поля; данные из файла .xml
         [Test, TestCaseSource("GroupDataFromXmlFile")]
-        //заполнить все поля
-        public void GroupCreationTest_AllFields(GroupData group)
+        public void GroupCreationTest_AllFieldsXml(GroupData group)
         {
             //GroupData group = new GroupData("aaa")
             //{
@@ -75,6 +92,21 @@ namespace WebAddressbookTests
             Assert.AreEqual(oldGroups, newGroups);
 
             //app.Auth.Logout();
+        }
+
+        //заполнить все поля; данные из файла .json
+        [Test, TestCaseSource("GroupDataFromJsonFile")]
+        public void GroupCreationTest_AllFieldsJson(GroupData group)
+        {
+            List<GroupData> oldGroups = app.Groups.GetGroupList();
+
+            app.Groups.Create(group);
+            oldGroups.Add(group);
+
+            List<GroupData> newGroups = app.Groups.GetGroupList();
+            oldGroups.Sort();
+            newGroups.Sort();
+            Assert.AreEqual(oldGroups, newGroups);
         }
 
         //[Test]
