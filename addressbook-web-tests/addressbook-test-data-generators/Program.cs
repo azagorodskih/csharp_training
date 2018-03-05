@@ -19,7 +19,7 @@ namespace addressbook_test_data_generators
             string dataType = args[0];
             int objectCount = Convert.ToInt32(args[1]);
             string filename = args[2];
-            //StreamWriter writer = new StreamWriter(filename);
+            StreamWriter writer = new StreamWriter(filename);
             string format = args[3];
 
             List<GroupData> groups = new List<GroupData>();
@@ -43,24 +43,19 @@ namespace addressbook_test_data_generators
                         //    writeGroupsToCsvFile(groups, writer);
                         //    break;
                         case "xml":
-                            StreamWriter writerXml = new StreamWriter(filename);
-                            writeGroupsToXmlFile(groups, writerXml);
+                            writeGroupsToXmlFile(groups, writer);
                             Console.Out.Write("groups.xml was successfully generated!\n");
-                            writerXml.Close();
                             break;
                         case "json":
-                            StreamWriter writerJson = new StreamWriter(filename);
-                            writeGroupsToJsonFile(groups, writerJson);
+                            writeGroupsToJsonFile(groups, writer);
                             Console.Out.Write("groups.json was successfully generated!\n");
-                            writerJson.Close();
                             break;
-                        case "excel":
-                            writeGroupsToExcelFile(groups, filename);
-                            break;
+                        //case "excel":
+                        //    writeGroupsToExcelFile(groups, filename);
+                        //    break;
                         default:
                             Console.Out.Write("Unrecognized format '" + format + "'.\n");
-                            break;
-                            //goto Finish;
+                            goto Finish;
                     }
 
                 break;
@@ -83,26 +78,25 @@ namespace addressbook_test_data_generators
                         });
                     }
 
-                    //switch (format)
-                    //{
-                    //    case "xml":
-                    //        writeContactsToXmlFile(contacts, writer);
-                    //        Console.Out.Write("contacts.xml was successfully generated!\n");
-                    //        break;
-                    //    case "json":
-                    //        writeContactsToJsonFile(contacts, writer);
-                    //        Console.Out.Write("contacts.json was successfully generated!\n");
-                    //        break;
-                    //    default:
-                    //        Console.Out.Write("Unrecognized format '" + format + "'.\n");
-                    //        goto Finish;
-                    //}
+                    switch (format)
+                    {
+                        case "xml":
+                            writeContactsToXmlFile(contacts, writer);
+                            Console.Out.Write("contacts.xml was successfully generated!\n");
+                            break;
+                        case "json":
+                            writeContactsToJsonFile(contacts, writer);
+                            Console.Out.Write("contacts.json was successfully generated!\n");
+                            break;
+                        default:
+                            Console.Out.Write("Unrecognized format '" + format + "'.\n");
+                            goto Finish;
+                    }
 
-                break;
+                    break;
                 default:
                     Console.Out.Write("Unrecognized data type '" + dataType + "'.\n");
-                    break;
-                    //goto Finish;
+                    goto Finish;
             }
 
             //if (format == "csv")
@@ -122,8 +116,8 @@ namespace addressbook_test_data_generators
             //    Console.Out.Write("Unrecognized format " + format);
             //}
 
-            //Finish:
-                //writer.Close();
+            Finish:
+                writer.Close();
         }
 
         static void writeGroupsToCsvFile(List<GroupData> groups, StreamWriter writer)

@@ -94,33 +94,131 @@ namespace WebAddressbookTests
             InitModifyContactFromList(index);
 
             string firstName = driver.FindElement(By.Name("firstname")).GetAttribute("value");
+            string middleName = driver.FindElement(By.Name("middlename")).GetAttribute("value");
             string lastName = driver.FindElement(By.Name("lastname")).GetAttribute("value");
+            string nickName = driver.FindElement(By.Name("nickname")).GetAttribute("value");
+            string company = driver.FindElement(By.Name("company")).GetAttribute("value");
+            string title = driver.FindElement(By.Name("title")).GetAttribute("value");
             string address = driver.FindElement(By.Name("address")).GetAttribute("value");
-
-            string email = driver.FindElement(By.Name("email")).GetAttribute("value");
-            string email2 = driver.FindElement(By.Name("email2")).GetAttribute("value");
-            string email3 = driver.FindElement(By.Name("email3")).GetAttribute("value");
 
             string homePhone = driver.FindElement(By.Name("home")).GetAttribute("value");
             string mobilePhone = driver.FindElement(By.Name("mobile")).GetAttribute("value");
             string workPhone = driver.FindElement(By.Name("work")).GetAttribute("value");
+            string fax = driver.FindElement(By.Name("fax")).GetAttribute("value");
+
+            string email = driver.FindElement(By.Name("email")).GetAttribute("value");
+            string email2 = driver.FindElement(By.Name("email2")).GetAttribute("value");
+            string email3 = driver.FindElement(By.Name("email3")).GetAttribute("value");
+            string homePage = driver.FindElement(By.Name("homepage")).GetAttribute("value");
+            
+            string bDay = driver.FindElement(By.Name("bday")).FindElements(By.TagName("option"))[0].Text;
+            string bMonth = driver.FindElement(By.Name("bmonth")).FindElements(By.TagName("option"))[0].Text;
+            string bYear = driver.FindElement(By.Name("byear")).GetAttribute("value");
+            string aDay = driver.FindElement(By.Name("aday")).FindElements(By.TagName("option"))[0].Text;
+            string aMonth = driver.FindElement(By.Name("amonth")).FindElements(By.TagName("option"))[0].Text;
+            string aYear = driver.FindElement(By.Name("ayear")).GetAttribute("value");
+
+            string secAddress = driver.FindElement(By.Name("address2")).GetAttribute("value");
+            string secHome = driver.FindElement(By.Name("phone2")).GetAttribute("value");
+            string notes = driver.FindElement(By.Name("notes")).GetAttribute("value");
 
             return new ContactData(firstName, lastName)
             {
+                Middlename = middleName,
+                Nickname = nickName,
+                Company = company,
+                Title = title,
                 Address = address,
+                Home = homePhone,
+                Mobile = mobilePhone,
+                Work = workPhone,
+                Fax = fax,
                 Email = email,
                 Email2 = email2,
                 Email3 = email3,
-                Home = homePhone,
-                Mobile = mobilePhone,
-                Work = workPhone
+                Homepage = homePage,
+                bDay = bDay,
+                bMonth = bMonth,
+                bYear = bYear,
+                aDay = aDay,
+                aMonth = aMonth,
+                aYear = aYear,
+                secAddress = secAddress,
+                secHome = secHome,
+                Notes = notes
             };
         }
 
-        //public ContactData GetContactInfoFromCard(ContactData contact)
-        //{
+        public ContactData GetContactInfoFromCard(int index)
+        {
+            ContactData contact = new ContactData();
+            contact = GetContactInfoFromForm(index);
+
+            if (contact.Firstname != null)
+            {
+                contact.FIO = contact.Firstname.Trim() + " ";
+            }
+            if (contact.Middlename != null)
+            {
+                contact.FIO = contact.FIO + contact.Middlename.Trim() + " ";
+            }
+            if (contact.Lastname != null)
+            {
+                contact.FIO = contact.FIO + contact.Lastname.Trim();
+            }
+            contact.FIO = contact.FIO.Trim();
+
+            contact.Nickname = contact.Nickname.Trim();
+            contact.Company = contact.Company.Trim();
+            contact.Title = contact.Title.Trim();
+            contact.Address = contact.CleanUpMultiline(contact.Address).Trim();
+
+            contact.Home = "H: " + contact.Home.Trim();
+            contact.Mobile = "M: " + contact.Mobile.Trim();
+            contact.Work = "W: " + contact.Work.Trim();
+            contact.Fax = "F: " + contact.Fax.Trim();
+
+            contact.Email = contact.Email.Trim();
+            contact.Email2 = contact.Email2.Trim();
+            contact.Email3 = contact.Email3.Trim();
+            contact.Homepage = "Homepage: " + contact.Homepage.Trim();
+
+            contact.Birthday = "Birthday ";
+            if (contact.bDay != null)
+            {
+                contact.Birthday = contact.Birthday + contact.bDay + ". ";
+            }
+            if (contact.bMonth != null)
+            {
+                contact.Birthday = contact.Birthday + contact.bMonth + " ";
+            }
+            if (contact.bYear != null)
+            {
+                contact.Birthday = contact.Birthday + contact.bYear.Trim();
+            }
+            contact.Birthday = contact.Birthday.Trim();
+
+            contact.Anniversary = "Anniversary ";
+            if (contact.aDay != null)
+            {
+                contact.Anniversary = contact.Anniversary + contact.aDay + ". ";
+            }
+            if (contact.aMonth != null)
+            {
+                contact.Anniversary = contact.Anniversary + contact.aMonth + " ";
+            }
+            if (contact.aYear != null)
+            {
+                contact.Anniversary = contact.Anniversary + contact.aYear.Trim();
+            }
+            contact.Anniversary = contact.Anniversary.Trim();
+
+            contact.secAddress = contact.secAddress.Trim();
+            contact.secHome = "P: " + contact.secHome.Trim();
+            contact.Notes = contact.Notes.Trim();
             
-        //}
+            return contact;
+        }
 
         public ContactData GetContactInfoFromList(int index)
         {

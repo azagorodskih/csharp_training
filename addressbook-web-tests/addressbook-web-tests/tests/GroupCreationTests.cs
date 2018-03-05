@@ -88,7 +88,7 @@ namespace WebAddressbookTests
         }
 
         //заполнить все поля; данные из файла .xml
-        [Test, TestCaseSource("GroupDataFromExcelFile")]
+        [Test, TestCaseSource("GroupDataFromXmlFile")]
         public void GroupCreationTest_AllFieldsXml(GroupData group)
         {
             //GroupData group = new GroupData("aaa")

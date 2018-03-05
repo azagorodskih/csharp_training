@@ -11,6 +11,9 @@ namespace WebAddressbookTests
     {
         private string allPhones;
         private string allEmails;
+        private string fio;
+        private string birthday;
+        private string anniversary;
 
         public ContactData()
         {
@@ -24,15 +27,34 @@ namespace WebAddressbookTests
 
         public string Firstname { get; set; }
 
+        public string Middlename { get; set; }
+
         public string Lastname { get; set; }
 
-        public string Middlename { get; set; }
+        public string FIO
+        {
+            get
+            {
+                if (fio != null)
+                {
+                    return fio;
+                }
+                else
+                {
+                    return (Firstname.Trim() + " " + Middlename.Trim() + " " + Lastname.Trim()).Trim();
+                }
+            }
+            set
+            {
+                fio = value;
+            }
+        }
 
         public string Nickname { get; set; }
 
-        public string Title { get; set; }
-
         public string Company { get; set; }
+
+        public string Title { get; set; }
 
         public string Address { get; set; }
 
@@ -41,6 +63,8 @@ namespace WebAddressbookTests
         public string Mobile { get; set; }
 
         public string Work { get; set; }
+
+        public string Fax { get; set; }
 
         public string AllPhones
         {
@@ -52,7 +76,7 @@ namespace WebAddressbookTests
                 }
                 else
                 {
-                    return (CleanUpPhone(Home) + CleanUpPhone(Mobile) + CleanUpPhone(Work)).Trim();
+                    return (CleanUpPhone(Home) + CleanUpPhone(Mobile) + CleanUpPhone(Work) + CleanUpPhone(secHome)).Trim();
                 }
             }
             set
@@ -86,6 +110,64 @@ namespace WebAddressbookTests
             }
         }
 
+        public string Homepage { get; set; }
+
+        public string bDay { get; set; }
+
+        public string bMonth { get; set; }
+
+        public string bYear { get; set; }
+
+        public string Birthday
+        {
+            get
+            {
+                if (birthday != null)
+                {
+                    return birthday;
+                }
+                else
+                {
+                    return BuildDate(bDay, bMonth, bYear);
+                }
+            }
+            set
+            {
+                birthday = value;
+            }
+        }
+
+        public string aDay { get; set; }
+
+        public string aMonth { get; set; }
+
+        public string aYear { get; set; }
+
+        public string Anniversary
+        {
+            get
+            {
+                if (anniversary != null)
+                {
+                    return anniversary;
+                }
+                else
+                {
+                    return BuildDate(aDay, aMonth, aYear);
+                }
+            }
+            set
+            {
+                anniversary = value;
+            }
+        }
+        
+        public string secAddress { get; set; }
+
+        public string secHome { get; set; }
+
+        public string Notes { get; set; }
+
         public string Id { get; set; }
 
         public string CleanUpPhone(string phone)
@@ -96,7 +178,7 @@ namespace WebAddressbookTests
             }
             else
             {
-                return Regex.Replace(phone, "[ ()-]", "") + "\r\n";
+                return Regex.Replace(phone, "[ /()-]", "") + "\r\n";
             }
         }
 
@@ -110,6 +192,39 @@ namespace WebAddressbookTests
             {
                 return Regex.Replace(email, "[ ]", "") + "\r\n";
             }
+        }
+
+        public string CleanUpMultiline(string multiline)
+        {
+            if (multiline == null || multiline == "")
+            {
+                return "";
+            }
+            else
+            {
+                return Regex.Replace(multiline, " \r\n", "\r\n");
+            }
+        }
+
+        public string BuildDate(string day, string month, string year)
+        {
+            string date = "";
+
+            if (day != null)
+            {
+                date = day + ". ";
+            }
+            if (month != null)
+            {
+                date = date + month + " ";
+            }
+            if (year != null)
+            {
+                date = date + year.Trim();
+            }
+            date.Trim();
+
+            return date;
         }
 
         public bool Equals(ContactData other)
@@ -142,6 +257,7 @@ namespace WebAddressbookTests
         {
             return "firstname=" + Firstname
                 + "\nmiddlename=" + Middlename
+                + "\nlastname=" + Lastname
                 + "\nnickname=" + Nickname
                 + "\ntitle=" + Title
                 + "\ncompany=" + Company
@@ -149,9 +265,16 @@ namespace WebAddressbookTests
                 + "\nhome=" + Home
                 + "\nmobile=" + Mobile
                 + "\nwork=" + Work
+                + "\nfax=" + Fax
                 + "\nemail=" + Email
                 + "\nemail2=" + Email2
-                + "\nemail3=" + Email3;
+                + "\nemail3=" + Email3
+                + "\nhomepage=" + Homepage
+                + "\nbirthday=" + Birthday
+                + "\nanniversary=" + Anniversary
+                + "\nsec_address=" + secAddress
+                + "\nsec_home=" + secHome
+                + "\nnotes=" + Notes;
         }
 
         public int CompareTo(ContactData other)
