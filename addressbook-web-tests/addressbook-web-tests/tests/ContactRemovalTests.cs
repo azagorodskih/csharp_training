@@ -16,20 +16,23 @@ namespace WebAddressbookTests
         {
             int index = 0; //отсчет от 0; для упрощения проверки теста удалению будет подвергаться первый контакт
 
-            List<ContactData> oldContacts = app.Contacts.GetContactList();
+            //List<ContactData> oldContacts = app.Contacts.GetContactList();
+            List<ContactData> oldContacts = ContactData.GetAll();
 
             if (oldContacts.Count == 0)
             {
                 app.Contacts.Create(new ContactData("firstName", "lastName"));
                 //oldContacts.Add(new ContactData("firstName", "lastName"));
-                oldContacts = app.Contacts.GetContactList(); //чтобы также узнать идентификатор созданного контакта
+                oldContacts = ContactData.GetAll();  //app.Contacts.GetContactList(); //чтобы также узнать идентификатор созданного контакта
             }
 
-            app.Contacts.RemoveContactFromCard(index);
+            //app.Contacts.RemoveContactFromCard(index);
             ContactData toBeRemoved = oldContacts[index];
-            oldContacts.RemoveAt(index);                     
+            app.Contacts.RemoveContactFromCard(toBeRemoved);
+            oldContacts.RemoveAt(index);
 
-            List<ContactData> newContacts = app.Contacts.GetContactList();
+            //List<ContactData> newContacts = app.Contacts.GetContactList();
+            List<ContactData> newContacts = ContactData.GetAll();
             oldContacts.Sort();
             newContacts.Sort();
             Assert.AreEqual(oldContacts, newContacts);
@@ -49,27 +52,31 @@ namespace WebAddressbookTests
             List<int> Index = new List<int>();
             Index.Add(0); //отсчет от 0; для упрощения проверки теста удалению будет подвергаться первый контакт
 
-            List<ContactData> oldContacts = app.Contacts.GetContactList();
+            //List<ContactData> oldContacts = app.Contacts.GetContactList();
+            List<ContactData> oldContacts = ContactData.GetAll();
 
             if (oldContacts.Count == 0)
             {
                 app.Contacts.Create(new ContactData("firstName", "lastName"));
                 //oldContacts.Add(new ContactData("firstName", "lastName"));
-                oldContacts = app.Contacts.GetContactList(); //чтобы также узнать идентификатор созданного контакта
+                oldContacts = ContactData.GetAll(); //app.Contacts.GetContactList(); //чтобы также узнать идентификатор созданного контакта
             }
 
-            app.Contacts.RemoveSelectedContactsFromList(Index);
-            ContactData toBeRemoved = oldContacts[Index[0]];
+            //app.Contacts.RemoveSelectedContactsFromList(Index);
+            List<ContactData> toBeRemoved = new List<ContactData>();
+            toBeRemoved.Add(oldContacts[Index[0]]);
+            app.Contacts.RemoveSelectedContactsFromList(toBeRemoved);
             oldContacts.RemoveAt(Index[0]);
 
-            List<ContactData> newContacts = app.Contacts.GetContactList();
+            //List<ContactData> newContacts = app.Contacts.GetContactList();
+            List<ContactData> newContacts = ContactData.GetAll();
             oldContacts.Sort();
             newContacts.Sort();
             Assert.AreEqual(oldContacts, newContacts);
 
             foreach (ContactData contact in newContacts)
             {
-                Assert.AreNotEqual(contact.Id, toBeRemoved.Id);
+                Assert.AreNotEqual(contact.Id, toBeRemoved[0].Id);
             }
 
             //app.Auth.Logout();
@@ -84,8 +91,10 @@ namespace WebAddressbookTests
             Index.Add(1);
             Index.Add(3);
 
-            List<ContactData> oldContacts_Before = app.Contacts.GetContactList(); //список контактов до удаления
+            List<ContactData> oldContacts_Before = new List<ContactData>(); //список контактов до удаления
             List<ContactData> oldContacts_After = new List<ContactData>(); //список контактов после удаления
+
+            oldContacts_Before = ContactData.GetAll();
 
             int contactCount = oldContacts_Before.Count;
             foreach (int i in Index)
@@ -104,9 +113,15 @@ namespace WebAddressbookTests
                                         и в дальнейшем после удаления списки oldContacts и newContacts могут разойтись из-за этой особенности*/
                 }
             }
-            oldContacts_Before = app.Contacts.GetContactList();
+            oldContacts_Before = ContactData.GetAll(); //app.Contacts.GetContactList();
 
-            app.Contacts.RemoveSelectedContactsFromList(Index);
+            //app.Contacts.RemoveSelectedContactsFromList(Index);
+            List<ContactData> toBeRemoved = new List<ContactData>();
+            foreach (int i in Index)
+            {
+                toBeRemoved.Add(oldContacts_Before[i]);
+            }
+            app.Contacts.RemoveSelectedContactsFromList(toBeRemoved);
 
             /*После использования RemoveAt в списке происходит сдвиг элементов.
             Поэтому чтобы правильно сформировать в oldContacts список оставшихся после удаления контактов,
@@ -117,9 +132,10 @@ namespace WebAddressbookTests
                 {
                     oldContacts_After.Add(oldContacts_Before[i]);
                 }
-            }                      
+            }
 
-            List<ContactData> newContacts = app.Contacts.GetContactList();
+            //List<ContactData> newContacts = app.Contacts.GetContactList();
+            List<ContactData> newContacts = ContactData.GetAll();
             oldContacts_After.Sort();
             newContacts.Sort();
             Assert.AreEqual(oldContacts_After, newContacts);
@@ -134,19 +150,21 @@ namespace WebAddressbookTests
         //удалить все контакты, вызвано из списка
         public void ContactRemovalTest_RemoveAll()
         {
-            List<ContactData> oldContacts = app.Contacts.GetContactList();
+            //List<ContactData> oldContacts = app.Contacts.GetContactList();
+            List<ContactData> oldContacts = ContactData.GetAll();
 
             if (oldContacts.Count == 0)
             {
                 app.Contacts.Create(new ContactData("firstName", "lastName"));
                 //oldContacts.Add(new ContactData("firstName", "lastName"));
-                oldContacts = app.Contacts.GetContactList();
+                oldContacts = ContactData.GetAll(); //app.Contacts.GetContactList();
             }
 
             app.Contacts.RemoveAllContactsFromList();
             oldContacts.Clear();
 
-            List<ContactData> newContacts = app.Contacts.GetContactList();
+            //List<ContactData> newContacts = app.Contacts.GetContactList();
+            List<ContactData> newContacts = ContactData.GetAll();
             oldContacts.Sort();
             newContacts.Sort();
             Assert.AreEqual(oldContacts, newContacts);

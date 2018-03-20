@@ -19,22 +19,25 @@ namespace WebAddressbookTests
             newData.Footer = "ooo";
             int index = 0; //отсчет от 0; для упрощения проверки теста модификации будет подвергаться первая группа
 
-            List<GroupData> oldGroups = app.Groups.GetGroupList();
+            //List<GroupData> oldGroups = app.Groups.GetGroupList();
+            List<GroupData> oldGroups = GroupData.GetAll();
 
-            if(oldGroups.Count == 0)
+            if (oldGroups.Count == 0)
             {
                 app.Groups.Create(new GroupData("NAME"));
                 //oldGroups.Add(new GroupData("NAME"));
-                oldGroups = app.Groups.GetGroupList(); //чтобы также узнать идентификатор созданной группы
+                oldGroups = GroupData.GetAll(); //app.Groups.GetGroupList(); //чтобы также узнать идентификатор созданной группы
             }
 
-            app.Groups.Modify(index, newData);
+            //app.Groups.Modify(index, newData);
             GroupData toBeModified = oldGroups[index];
+            app.Groups.Modify(toBeModified, newData);
             oldGroups[index].Name = newData.Name;
 
             //Assert.AreEqual(oldGroups.Count, app.Groups.GetGroupCount());
 
-            List<GroupData> newGroups = app.Groups.GetGroupList();
+            //List<GroupData> newGroups = app.Groups.GetGroupList();
+            List<GroupData> newGroups = GroupData.GetAll();
             //oldGroups[index].Name = newData.Name;
             oldGroups.Sort();
             newGroups.Sort();
@@ -60,22 +63,25 @@ namespace WebAddressbookTests
             emptyData.Footer = "";
             int index = 0; //отсчет от 0; для упрощения проверки теста модификации будет подвергаться первая группа
 
-            List<GroupData> oldGroups = app.Groups.GetGroupList();
+            //List<GroupData> oldGroups = app.Groups.GetGroupList();
+            List<GroupData> oldGroups = GroupData.GetAll();
 
             if (oldGroups.Count == 0)
             {
                 app.Groups.Create(new GroupData("NAME"));
                 //oldGroups.Add(new GroupData("NAME"));
-                oldGroups = app.Groups.GetGroupList(); //чтобы также узнать идентификатор созданной группы
+                oldGroups = GroupData.GetAll(); //app.Groups.GetGroupList(); //чтобы также узнать идентификатор созданной группы
             }
 
-            app.Groups.Modify(index, emptyData);
+            //app.Groups.Modify(index, emptyData);
             GroupData toBeModified = oldGroups[index];
+            app.Groups.Modify(toBeModified, emptyData);
             oldGroups[index].Name = emptyData.Name;
 
             //Assert.AreEqual(oldGroups.Count, app.Groups.GetGroupCount());
 
-            List<GroupData> newGroups = app.Groups.GetGroupList();
+            //List<GroupData> newGroups = app.Groups.GetGroupList();
+            List<GroupData> newGroups = GroupData.GetAll();
             //oldGroups[index].Name = newData.Name;
             oldGroups.Sort();
             newGroups.Sort();
@@ -101,22 +107,25 @@ namespace WebAddressbookTests
             newData.Footer = null;
             int index = 0; //отсчет от 0; для упрощения проверки теста модификации будет подвергаться первая группа
 
-            List<GroupData> oldGroups = app.Groups.GetGroupList();
+            //List<GroupData> oldGroups = app.Groups.GetGroupList();
+            List<GroupData> oldGroups = GroupData.GetAll();
 
             if (oldGroups.Count == 0)
             {
                 app.Groups.Create(new GroupData("NAME"));
-                oldGroups.Add(new GroupData("NAME"));
-                oldGroups = app.Groups.GetGroupList(); //чтобы также узнать идентификатор созданной группы
+                //oldGroups.Add(new GroupData("NAME"));
+                oldGroups = GroupData.GetAll(); //app.Groups.GetGroupList(); //чтобы также узнать идентификатор созданной группы
             }
 
-            app.Groups.Modify(index, newData);
+            //app.Groups.Modify(index, newData);
             GroupData toBeModified = oldGroups[index];
+            app.Groups.Modify(toBeModified, newData);
             oldGroups[index].Name = newData.Name;
 
             //Assert.AreEqual(oldGroups.Count, app.Groups.GetGroupCount());
 
-            List<GroupData> newGroups = app.Groups.GetGroupList();
+            //List<GroupData> newGroups = app.Groups.GetGroupList();
+            List<GroupData> newGroups = GroupData.GetAll();
             //oldGroups[index].Name = newData.Name;
             oldGroups.Sort();
             newGroups.Sort();

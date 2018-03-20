@@ -15,12 +15,13 @@ namespace WebAddressbookTests
         {
             GroupData group = GroupData.GetAll()[0];
             List<ContactData> oldList = group.GetContacts();
-            ContactData contact = ContactData.GetAll().Except(group.GetContacts()).First();
+            List<ContactData> contact = new List<ContactData>();
+            contact.Add(ContactData.GetAll().Except(group.GetContacts()).First());
 
             app.Contacts.AddSelectedContactsToGroup(contact, group);
             
             List<ContactData> newList = group.GetContacts();
-            oldList.Add(contact);
+            oldList.Add(contact[0]);
             oldList.Sort();
             newList.Sort();
             Assert.AreEqual(oldList, newList);

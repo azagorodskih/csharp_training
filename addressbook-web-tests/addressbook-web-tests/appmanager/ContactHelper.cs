@@ -33,11 +33,27 @@ namespace WebAddressbookTests
             Modify(newData);
             return this;
         }
-                
+
+        public ContactHelper ModifyFromList(ContactData contact, ContactData newData)
+        {
+            manager.Navigator.OpenHomePage();
+            InitModifyContactFromList(contact.Id);
+            Modify(newData);
+            return this;
+        }
+
         public ContactHelper ModifyFromCard(int index, ContactData newData)
         {
             manager.Navigator.OpenHomePage();
             OpenContactCardForModify(index);
+            Modify(newData);
+            return this;
+        }
+
+        public ContactHelper ModifyFromCard(ContactData contact, ContactData newData)
+        {
+            manager.Navigator.OpenHomePage();
+            OpenContactCardForModify(contact.Id);
             Modify(newData);
             return this;
         }
@@ -53,17 +69,14 @@ namespace WebAddressbookTests
             return this;
         }              
 
-        public ContactHelper AddSelectedContactsToGroup(ContactData contact, GroupData group)
+        public ContactHelper AddSelectedContactsToGroup(List<ContactData> contacts, GroupData group)
         {
             manager.Navigator.OpenHomePage();
             ClearGroupFilter();
-            SelectContact(contact.Id);
-
-            //foreach (int i in index)
-            //{
-            //    SelectContact(i);
-            //}
-
+            foreach (ContactData c in contacts)
+            {
+                SelectContact(c.Id);
+            }
             AddToGroup(group.Name);
             return this;
         }
@@ -83,7 +96,15 @@ namespace WebAddressbookTests
             //ReturnToHomePage();
             return this;
         }
-                
+
+        public ContactHelper RemoveContactFromCard(ContactData contact)
+        {
+            manager.Navigator.OpenHomePage();
+            RemoveFromCard(contact.Id);
+            //ReturnToHomePage();
+            return this;
+        }
+
         public ContactHelper RemoveSelectedContactsFromList(List<int> index)
         {
             manager.Navigator.OpenHomePage();
@@ -92,14 +113,28 @@ namespace WebAddressbookTests
                 SelectContact(i);
             }
             RemoveFromList();
+            manager.Navigator.OpenHomePage();
             return this;
         }
-                
+
+        public ContactHelper RemoveSelectedContactsFromList(List<ContactData> contacts)
+        {
+            manager.Navigator.OpenHomePage();
+            foreach (ContactData c in contacts)
+            {
+                SelectContact(c.Id);
+            }
+            RemoveFromList();
+            manager.Navigator.OpenHomePage();
+            return this;
+        }
+
         public ContactHelper RemoveAllContactsFromList()
         {
             manager.Navigator.OpenHomePage();
             SelectAllContacts();
             RemoveFromList();
+            manager.Navigator.OpenHomePage();
             return this;
         }
 
@@ -242,6 +277,22 @@ namespace WebAddressbookTests
             return this;
         }
 
+        public ContactHelper OpenContactCard(string id)
+        {
+            ICollection<IWebElement> elements = driver.FindElements(By.CssSelector("tr[name=entry]"));
+            string Id;
+            foreach (IWebElement element in elements)
+            {
+                Id = element.FindElement(By.TagName("input")).GetAttribute("value");
+                if (Id == id)
+                {
+                    element.FindElement(By.XPath("./td[7]")).Click();
+                    return this;
+                }
+            }
+            return this;
+        }
+
         public ContactHelper InitContactModification()
         {
             driver.FindElement(By.Name("modifiy")).Click();
@@ -255,9 +306,32 @@ namespace WebAddressbookTests
             return this;
         }
 
+        public ContactHelper OpenContactCardForModify(string id)
+        {
+            OpenContactCard(id);
+            InitContactModification();
+            return this;
+        }
+
         public ContactHelper InitModifyContactFromList(int index)
         {
             driver.FindElement(By.XPath("(//img[@alt='Edit'])[" + (index + 1) + "]")).Click();
+            return this;
+        }
+
+        public ContactHelper InitModifyContactFromList(string id)
+        {
+            ICollection<IWebElement> elements = driver.FindElements(By.CssSelector("tr[name=entry]"));
+            string Id;
+            foreach (IWebElement element in elements)
+            {
+                Id = element.FindElement(By.TagName("input")).GetAttribute("value");
+                if (Id == id)
+                {
+                    element.FindElement(By.XPath("./td[8]")).Click();
+                    return this;
+                }
+            }
             return this;
         }
 
@@ -365,12 +439,19 @@ namespace WebAddressbookTests
 
         public bool IsContactPresent(int index)
         {
+            manager.Navigator.OpenHomePage();
             return IsElementPresent(By.XPath("(//img[@alt='Edit'])[" + (index + 1) + "]"));
         }
 
         public void RemoveFromCard(int index)
         {
             OpenContactCardForModify(index);
+            RemoveContact(true);
+        }
+
+        public void RemoveFromCard(string id)
+        {
+            OpenContactCardForModify(id);
             RemoveContact(true);
         }
 

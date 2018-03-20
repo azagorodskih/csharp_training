@@ -27,30 +27,29 @@ namespace WebAddressbookTests
             return this;
         }
 
-        public GroupHelper Modify(int index, GroupData group)
+        public GroupHelper Modify(int index, GroupData newData)
         {
             manager.Navigator.GoToGroupsPage();
             SelectGroup(index);
             InitGroupModification();
-            FillGroupForm(group);
+            FillGroupForm(newData);
             SubmitGroupModification();
             //ReturnToGroupsPage();
             manager.Navigator.GoToGroupsPage();
             return this;
         }
 
-        public GroupHelper Remove(GroupData group)
+        public GroupHelper Modify(GroupData group, GroupData newData)
         {
             manager.Navigator.GoToGroupsPage();
-            //foreach (int i in index)
-            //{
-            //    SelectGroup(i);
-            //}
             SelectGroup(group.Id);
-            SubmitGroupRemoval();
+            InitGroupModification();
+            FillGroupForm(newData);
+            SubmitGroupModification();
+            //ReturnToGroupsPage();
             manager.Navigator.GoToGroupsPage();
             return this;
-        }
+        }               
 
         public GroupHelper Remove(List<int> index)
         {
@@ -61,6 +60,18 @@ namespace WebAddressbookTests
             }
             SubmitGroupRemoval();
             //ReturnToGroupsPage();
+            manager.Navigator.GoToGroupsPage();
+            return this;
+        }
+
+        public GroupHelper Remove(List<GroupData> groups)
+        {
+            manager.Navigator.GoToGroupsPage();
+            foreach (GroupData g in groups)
+            {
+                SelectGroup(g.Id);
+            }
+            SubmitGroupRemoval();
             manager.Navigator.GoToGroupsPage();
             return this;
         }
@@ -174,6 +185,7 @@ namespace WebAddressbookTests
 
         public bool IsGroupPresent(int index)
         {
+            manager.Navigator.GoToGroupsPage();
             return IsElementPresent(By.XPath("(//input[@name='selected[]'])[" + (index + 1) + "]")) ;
         }
 

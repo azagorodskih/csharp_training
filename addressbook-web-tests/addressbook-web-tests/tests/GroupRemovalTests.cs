@@ -28,7 +28,8 @@ namespace WebAddressbookTests
             }
 
             //app.Groups.Remove(Index);
-            GroupData toBeRemoved = oldGroups[Index[0]];
+            List<GroupData> toBeRemoved = new List<GroupData>();
+            toBeRemoved.Add(oldGroups[Index[0]]);
             app.Groups.Remove(toBeRemoved);
             oldGroups.RemoveAt(Index[0]);
 
@@ -42,7 +43,7 @@ namespace WebAddressbookTests
 
             foreach (GroupData group in newGroups)
             {
-                Assert.AreNotEqual(group.Id, toBeRemoved.Id);
+                Assert.AreNotEqual(group.Id, toBeRemoved[0].Id);
             }
 
             //app.Auth.Logout();
@@ -56,8 +57,10 @@ namespace WebAddressbookTests
             Index.Add(2);
             Index.Add(1);
             Index.Add(3);
-            List<GroupData> oldGroups_Before = app.Groups.GetGroupList(); //список групп до удаления
+            List<GroupData> oldGroups_Before = new List<GroupData>(); //список групп до удаления
             List<GroupData> oldGroups_After = new List<GroupData>(); //список групп после удаления
+
+            oldGroups_Before = GroupData.GetAll();
 
             int groupCount = oldGroups_Before.Count;
             foreach (int i in Index)
@@ -76,9 +79,16 @@ namespace WebAddressbookTests
                                         и в дальнейшем после удаления списки oldGroups и newGroups могут разойтись из-за этой особенности*/
                 }
             }
-            oldGroups_Before = app.Groups.GetGroupList(); //чтобы также узнать идентификатор созданной группы
+            //oldGroups_Before = app.Groups.GetGroupList(); //чтобы также узнать идентификатор созданной группы
+            oldGroups_Before = GroupData.GetAll();
 
-            app.Groups.Remove(Index);
+            //app.Groups.Remove(Index);
+            List<GroupData> toBeRemoved = new List<GroupData>();
+            foreach (int i in Index)
+            {
+                toBeRemoved.Add(oldGroups_Before[i]);
+            }
+            app.Groups.Remove(toBeRemoved);
 
             /*После использования RemoveAt в списке происходит сдвиг элементов.
             Поэтому чтобы правильно сформировать в oldGroups список оставшихся после удаления групп,
@@ -93,7 +103,8 @@ namespace WebAddressbookTests
 
             //Assert.AreEqual(oldGroups_After.Count, app.Groups.GetGroupCount());
 
-            List<GroupData> newGroups = app.Groups.GetGroupList();
+            //List<GroupData> newGroups = app.Groups.GetGroupList();
+            List<GroupData> newGroups = GroupData.GetAll();
             oldGroups_After.Sort();
             newGroups.Sort();
             Assert.AreEqual(oldGroups_After, newGroups);

@@ -10,26 +10,26 @@ namespace WebAddressbookTests
     [TestFixture]
     public class LoginTests : TestBase
     {
-        [Test]
-        public void LoginWithValidCredentials()
-        {
-            AccountData account = new AccountData("admin", "secret");
+        //[Test]
+        //public void LoginWithValidCredentials()
+        //{
+        //    AccountData account = new AccountData("admin", "secret");
 
-            app.Auth.Logout();
+        //    app.Auth.Logout();
 
-            app.Auth.Login(account);
-            Assert.IsTrue(app.Auth.IsLoggedIn(account));
-        }
+        //    app.Auth.Login(account);
+        //    Assert.IsTrue(app.Auth.IsLoggedIn(account));
+        //}
 
-        [Test]
-        public void LoginWithInvalidCredentials()
-        {
-            AccountData account = new AccountData("admin", "12345");
+        //[Test]
+        //public void LoginWithInvalidCredentials()
+        //{
+        //    AccountData account = new AccountData("admin", "12345");
 
-            app.Auth.Logout();
+        //    app.Auth.Logout();
 
-            app.Auth.Login(account);
-            Assert.IsFalse(app.Auth.IsLoggedIn(account));
-        }
+        //    app.Auth.Login(account);
+        //    Assert.IsFalse(app.Auth.IsLoggedIn(account));
+        //}
     }
 }
