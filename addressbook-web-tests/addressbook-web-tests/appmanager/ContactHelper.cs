@@ -44,12 +44,27 @@ namespace WebAddressbookTests
 
         public ContactHelper AddSelectedContactsToGroup(List<int> index, string groupName)
         {
-            manager.Navigator.OpenHomePage();
+            manager.Navigator.OpenHomePage();            
             foreach (int i in index)
             {
                 SelectContact(i);
             }
             AddToGroup(groupName);
+            return this;
+        }              
+
+        public ContactHelper AddSelectedContactsToGroup(ContactData contact, GroupData group)
+        {
+            manager.Navigator.OpenHomePage();
+            ClearGroupFilter();
+            SelectContact(contact.Id);
+
+            //foreach (int i in index)
+            //{
+            //    SelectContact(i);
+            //}
+
+            AddToGroup(group.Name);
             return this;
         }
 
@@ -59,8 +74,8 @@ namespace WebAddressbookTests
             SelectAllContacts();
             AddToGroup(groupName);
             return this;
-        }  
-
+        }
+                
         public ContactHelper RemoveContactFromCard(int index)
         {
             manager.Navigator.OpenHomePage();
@@ -277,6 +292,12 @@ namespace WebAddressbookTests
             return this;
         }
 
+        public ContactHelper SelectContact(string id)
+        {
+            driver.FindElement(By.Id(id)).Click();
+            return this;
+        }
+
         public ContactHelper SelectAllContacts()
         {
             driver.FindElement(By.Id("MassCB")).Click();
@@ -351,6 +372,11 @@ namespace WebAddressbookTests
         {
             OpenContactCardForModify(index);
             RemoveContact(true);
+        }
+
+        public void ClearGroupFilter()
+        {
+            new SelectElement(driver.FindElement(By.Name("group"))).SelectByText("[all]");
         }
 
         private List<ContactData> contactCash = null;

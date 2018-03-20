@@ -14,7 +14,7 @@ using System.Linq;
 namespace WebAddressbookTests
 {
     [TestFixture]
-    public class GroupCreationTests : AuthTestBase
+    public class GroupCreationTests : GroupTestBase
     {
         //генератор случайных строк
         public static IEnumerable<GroupData> RandomGroupDataProvider()
@@ -98,14 +98,16 @@ namespace WebAddressbookTests
             //    Footer = "ccc"
             //};
 
-            List<GroupData> oldGroups = app.Groups.GetGroupList();
+            //List<GroupData> oldGroups = app.Groups.GetGroupList();
+            List<GroupData> oldGroups = GroupData.GetAll();
 
             app.Groups.Create(group);
             oldGroups.Add(group);
 
             //Assert.AreEqual(oldGroups.Count + 1, app.Groups.GetGroupCount());
 
-            List<GroupData> newGroups = app.Groups.GetGroupList();
+            //List<GroupData> newGroups = app.Groups.GetGroupList();
+            List<GroupData> newGroups = GroupData.GetAll();
             oldGroups.Sort();
             newGroups.Sort();
             Assert.AreEqual(oldGroups, newGroups);
@@ -117,30 +119,37 @@ namespace WebAddressbookTests
         [Test, TestCaseSource("GroupDataFromJsonFile")]
         public void GroupCreationTest_AllFieldsJson(GroupData group)
         {
-            List<GroupData> oldGroups = app.Groups.GetGroupList();
+            //List<GroupData> oldGroups = app.Groups.GetGroupList();
+            List<GroupData> oldGroups = GroupData.GetAll();
 
             app.Groups.Create(group);
             oldGroups.Add(group);
 
-            List<GroupData> newGroups = app.Groups.GetGroupList();
+            //List<GroupData> newGroups = app.Groups.GetGroupList();
+            List<GroupData> newGroups = GroupData.GetAll();
             oldGroups.Sort();
             newGroups.Sort();
             Assert.AreEqual(oldGroups, newGroups);
         }
 
-        [Test]
-        public void TestDBConnectivity()
-        {
-            DateTime start = DateTime.Now;
-            List<GroupData> fromUI = app.Groups.GetGroupList();
-            DateTime end = DateTime.Now;
-            System.Console.Out.WriteLine(end.Subtract(start));
+        //[Test]
+        //public void TestDBConnectivity()
+        //{
+        //    //DateTime start = DateTime.Now;
+        //    //List<GroupData> fromUI = app.Groups.GetGroupList();
+        //    //DateTime end = DateTime.Now;
+        //    //System.Console.Out.WriteLine(end.Subtract(start));
 
-            start = DateTime.Now;
-            List<GroupData> fromDB = GroupData.GetAll();
-            end = DateTime.Now;
-            System.Console.Out.WriteLine(end.Subtract(start));
-        }
+        //    //start = DateTime.Now;
+        //    //List<GroupData> fromDB = GroupData.GetAll();
+        //    //end = DateTime.Now;
+        //    //System.Console.Out.WriteLine(end.Subtract(start));
+
+        //    foreach(ContactData contact in GroupData.GetAll()[0].GetContacts())
+        //    {
+        //        System.Console.Out.WriteLine(contact);
+        //    }
+        //}
 
         //[Test]
         ////оставить все поля пустыми
