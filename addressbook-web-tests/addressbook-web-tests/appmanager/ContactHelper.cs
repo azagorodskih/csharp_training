@@ -88,7 +88,30 @@ namespace WebAddressbookTests
             AddToGroup(groupName);
             return this;
         }
-                
+
+        public ContactHelper RemoveSelectedContactsFromGroup(List<ContactData> contacts, GroupData group)
+        {
+            manager.Navigator.OpenHomePage();
+            ShowGroupContent(group.Name);
+            foreach (ContactData c in contacts)
+            {
+                SelectContact(c.Id);
+            }
+            SubmitRemoveFromGroup();
+            GoToGroupPage(group.Name);
+            return this;
+        }
+
+        public ContactHelper RemoveAllContactsFromGroup(string groupName)
+        {
+            manager.Navigator.OpenHomePage();
+            ShowGroupContent(groupName);
+            SelectAllContacts();
+            SubmitRemoveFromGroup();
+            GoToGroupPage(groupName);
+            return this;
+        }
+
         public ContactHelper RemoveContactFromCard(int index)
         {
             manager.Navigator.OpenHomePage();
@@ -344,6 +367,13 @@ namespace WebAddressbookTests
         public ContactHelper SubmitAddToGroup()
         {
             driver.FindElement(By.Name("add")).Click();
+            groupcontentCash = null;
+            return this;
+        }
+
+        public ContactHelper SubmitRemoveFromGroup()
+        {
+            driver.FindElement(By.Name("remove")).Click();
             groupcontentCash = null;
             return this;
         }
