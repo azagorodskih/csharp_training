@@ -15,7 +15,7 @@ namespace addressbook_tests_white
 
             GroupData newGroup = new GroupData()
             {
-                Name = "white"
+                Name = "whiteTest"
             };
 
             app.Groups.Add(newGroup);
