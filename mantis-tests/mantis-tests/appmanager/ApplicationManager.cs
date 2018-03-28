@@ -13,13 +13,23 @@ namespace mantis_tests
     public class ApplicationManager
     {
         protected IWebDriver driver;
-        protected string baseURL;      
+        protected string baseURL;
+        protected AuthHelper authHelper;
+        protected NavigationHelper navigationHelper;
+        protected ProjectHelper projectHelper;
         private static ThreadLocal<ApplicationManager> app = new ThreadLocal<ApplicationManager>();
         
         private ApplicationManager()
         {
-            driver = new FirefoxDriver();
-            baseURL = "http://localhost";
+            FirefoxOptions options = new FirefoxOptions();
+            options.BrowserExecutableLocation = @"c:\Program Files\Mozilla Firefox\firefox.exe";
+            options.UseLegacyImplementation = true;
+            driver = new FirefoxDriver(options);
+            baseURL = "http://localhost/mantisbt-2.12.0";
+
+            authHelper = new AuthHelper(this);
+            navigationHelper = new NavigationHelper(this);
+            projectHelper = new ProjectHelper(this);
             Registration = new RegistrationHelper(this);
             Ftp = new FtpHelper(this);
         }
@@ -41,7 +51,7 @@ namespace mantis_tests
             if (! app.IsValueCreated)
             {
                 ApplicationManager newInstance = new ApplicationManager();
-                newInstance.driver.Url = "http://localhost/mantisbt-2.12.0/login_page.php";
+                newInstance.Navigator.OpenHomePage();
                 app.Value = newInstance;
             }
             return app.Value;
@@ -60,6 +70,30 @@ namespace mantis_tests
             get
             {
                 return baseURL;
+            }
+        }
+
+        public AuthHelper Auth
+        {
+            get
+            {
+                return authHelper;
+            }
+        }
+
+        public NavigationHelper Navigator
+        {
+            get
+            {
+                return navigationHelper;
+            }
+        }
+
+        public ProjectHelper Project
+        {
+            get
+            {
+                return projectHelper;
             }
         }
 

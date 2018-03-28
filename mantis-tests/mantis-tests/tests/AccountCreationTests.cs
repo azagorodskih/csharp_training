@@ -18,18 +18,16 @@ namespace mantis_tests
             }
         }
 
-        [Test]
-        public void TestAccountRegistration()
-        {
-            AccountData account = new AccountData()
-            {
-                Name = "testuser",
-                Password = "password",
-                Email = "testuser@localhost.localdomain"
-            };
+        //[Test]
+        //public void TestAccountRegistration()
+        //{
+        //    AccountData account = new AccountData("testuser", "password")
+        //    {
+        //        Email = "testuser@localhost.localdomain"
+        //    };
 
-            app.Registration.Register(account);
-        }
+        //    app.Registration.Register(account);
+        //}
 
         [TestFixtureTearDown]
         public void restoreConfig()
