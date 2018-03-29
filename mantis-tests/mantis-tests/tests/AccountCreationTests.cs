@@ -1,7 +1,7 @@
 ﻿using System;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NUnit.Framework;
 using System.IO;
+using System.Collections.Generic;
 
 namespace mantis_tests
 {
@@ -21,10 +21,18 @@ namespace mantis_tests
         [Test]
         public void TestAccountRegistration()
         {
-            AccountData account = new AccountData("testuser4", "password")
+            AccountData account = new AccountData("testuser5", "password")
             {
-                Email = "testuser4@localhost.localdomain"
+                Email = "testuser5@localhost.localdomain"
             };
+
+            List<AccountData> accounts = app.Admin.GetAllAccounts();
+
+            AccountData existingAccount = accounts.Find(x => x.Name == account.Name);
+            if (existingAccount != null)
+            {
+                app.Admin.DeleteAccount(existingAccount);
+            }
 
             app.James.Delete(account);
             app.James.Add(account);
