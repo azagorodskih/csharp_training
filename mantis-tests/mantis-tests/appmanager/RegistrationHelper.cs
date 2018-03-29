@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Firefox;
+using System.Text.RegularExpressions;
 
 namespace mantis_tests
 {
@@ -18,6 +19,9 @@ namespace mantis_tests
             OpenRegistrationForm();
             FillRegistrationForm(account);
             SubmitRegistration();
+            String url = GetConfirmationUrl(account);
+            FillPasswordForm(url, account);
+            SubmitPasswordForm();
         }
 
         public void OpenMainPage()
@@ -39,6 +43,25 @@ namespace mantis_tests
         public void SubmitRegistration()
         {
             driver.FindElement(By.XPath("//input[@value='Зарегистрироваться']")).Click();
+        }
+
+        public string GetConfirmationUrl(AccountData account)
+        {
+            string message = manager.Mail.GetLastMail(account);
+            Match match = Regex.Match(message, @"http://\S*");
+            return match.Value;
+        }
+
+        public void FillPasswordForm(string url, AccountData account)
+        {
+            driver.Url = url;
+            driver.FindElement(By.Name("password")).SendKeys(account.Password);
+            driver.FindElement(By.Name("password_confirm")).SendKeys(account.Password);
+        }
+
+        public void SubmitPasswordForm()
+        {
+            driver.FindElement(By.XPath("//button[@type='submit']")).Click();
         }
     }
 }
