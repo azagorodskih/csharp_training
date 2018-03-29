@@ -11,15 +11,19 @@ namespace mantis_tests
     public class ProjectRemovalTests : AuthTestBase
     {
         [Test]
-        public void RemoveProjectTest()
+        //удалить проект; получение списка проектов и при необходимости создание проекта реализовать через интерфейс
+        public void RemoveProjectTest_WithUI()
         {
             int index = 0; //для упрощения будем удалять самый первый проект
 
             List<ProjectData> oldProjects = app.Project.GetProjectsFromUI();
             if (oldProjects.Count == 0)
             {
-                ProjectData p = new ProjectData("ttt");
-                bool isSuccess = app.Project.Create(p);
+                ProjectData p = new ProjectData("ttt")
+                {
+                    Description = "ddd"
+                };
+                bool isSuccess = app.Project.CreateFromUI(p);
                 if (isSuccess)
                 {
                     oldProjects.Add(p);
@@ -39,6 +43,33 @@ namespace mantis_tests
                 oldProjects.Sort();
                 newProjects.Sort();
                 Assert.AreEqual(oldProjects, newProjects);
+        }
+
+        [Test]
+        //удалить проект; получение списка проектов и при необходимости создание проекта реализовать через веб-сервис
+        public void RemoveProjectTest_WithSoap()
+        {
+            int index = 0; //для упрощения будем удалять самый первый проект
+
+            List<ProjectData> oldProjects = app.Project.GetProjectsFromSoap();
+            if (oldProjects.Count == 0)
+            {
+                ProjectData p = new ProjectData("ttt")
+                {
+                    Description = "ddd"
+                };
+                string isSuccess = app.Project.CreateFromSoap(p);
+                //проверить, что содержит isSuccess, возможно, это значение нужно обрабатывать
+                oldProjects.Add(p);
+            }
+
+            app.Project.Remove(index);
+            oldProjects.RemoveAt(index);
+
+            List<ProjectData> newProjects = app.Project.GetProjectsFromSoap();
+            oldProjects.Sort();
+            newProjects.Sort();
+            Assert.AreEqual(oldProjects, newProjects);
         }
     }
 }

@@ -19,10 +19,10 @@
     <ServiceContractMappings />
   </ClientOptions>
   <MetadataSources>
-    <MetadataSource Address="http://localhost/mantisbt-2.12.0/api/soap/mantisconnect.wsdl" Protocol="http" SourceId="1" />
+    <MetadataSource Address="http://localhost/mantisbt-2.12.0/api/soap/mantisconnect.php?wsdl" Protocol="http" SourceId="1" />
   </MetadataSources>
   <Metadata>
-    <MetadataFile FileName="mantisconnect.wsdl" MetadataType="Wsdl" ID="7a13b03e-027b-40c0-b72b-a0bc58d0ca01" SourceId="1" SourceUrl="http://localhost/mantisbt-2.12.0/api/soap/mantisconnect.wsdl" />
+    <MetadataFile FileName="mantisconnect1.wsdl" MetadataType="Wsdl" ID="efb04401-feb6-4689-8a07-5ab7c1bad65e" SourceId="1" SourceUrl="http://localhost/mantisbt-2.12.0/api/soap/mantisconnect.php?wsdl" />
   </Metadata>
   <Extensions>
     <ExtensionFile FileName="configuration91.svcinfo" Name="configuration91.svcinfo" />

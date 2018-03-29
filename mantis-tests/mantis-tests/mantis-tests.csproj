@@ -107,7 +107,7 @@
     <None Include="config_inc.php">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="Connected Services\Mantis\mantisconnect.wsdl" />
+    <None Include="Connected Services\Mantis\mantisconnect1.wsdl" />
     <None Include="Connected Services\Mantis\mantis_tests.Mantis.AccountData.datasource">
       <DependentUpon>Reference.svcmap</DependentUpon>
     </None>

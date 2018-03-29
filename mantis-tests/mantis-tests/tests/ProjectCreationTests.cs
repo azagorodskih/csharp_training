@@ -36,7 +36,7 @@ namespace mantis_tests
 
             if (!isExist)
             {
-                bool isSuccess = app.Project.Create(newProject);
+                bool isSuccess = app.Project.CreateFromUI(newProject);
                 if (isSuccess)
                 {
                     oldProjects.Add(newProject);
@@ -83,7 +83,7 @@ namespace mantis_tests
 
             if (isExist)
             {
-                bool isSuccess = app.Project.Create(newProject);
+                bool isSuccess = app.Project.CreateFromUI(newProject);
                 if (!isSuccess)
                 {
                     //проверяем, что список проектов не поменялся
@@ -104,12 +104,12 @@ namespace mantis_tests
         }
 
         [Test]
-        //создать проект с несуществующим именем; список проектов получать через веб-сервис
+        //создать проект с несуществующим именем; получение списка проектов и создание проекта реализовать через веб-сервис
         public void CreateProjectTest_WithWebService()
         {
-            ProjectData newProject = new ProjectData("Project1")
+            ProjectData newProject = new ProjectData("Project3")
             {
-                Description = "Project1 Description"
+                Description = "Project3 Description"
             };
 
             List<ProjectData> oldProjects = app.Project.GetProjectsFromSoap();
@@ -129,8 +129,8 @@ namespace mantis_tests
 
             if (!isExist)
             {
-                bool isSuccess = app.Project.Create(newProject);
-                if (isSuccess)
+                string isSuccess = app.Project.CreateFromSoap(newProject);
+                if (isSuccess != null || isSuccess != "")
                 {
                     oldProjects.Add(newProject);
 

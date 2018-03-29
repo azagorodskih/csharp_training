@@ -13,7 +13,7 @@ namespace mantis_tests
     {
         public ProjectHelper(ApplicationManager manager) : base(manager) { }
 
-        public bool Create(ProjectData project)
+        public bool CreateFromUI(ProjectData project)
         {
             //manager.Navigator.GoToAccountPage();
             manager.Navigator.GoToManagementPage();
@@ -22,6 +22,17 @@ namespace mantis_tests
             FillProjectCreationForm(project);
             SubmitProjectCreation();
             return manager.Navigator.ReturnToProjectManagementMenu();
+        }
+
+        public string CreateFromSoap(ProjectData project)
+        {
+            Mantis.MantisConnectPortTypeClient client = new Mantis.MantisConnectPortTypeClient();
+
+            Mantis.ProjectData mc_project = new Mantis.ProjectData();
+            mc_project.name = project.Name;
+            mc_project.description = project.Description;
+
+            return client.mc_project_add("administrator", "root", mc_project); //веб-сервис возвращает идентификатор созданного проекта
         }
 
         public void Remove(int index)
