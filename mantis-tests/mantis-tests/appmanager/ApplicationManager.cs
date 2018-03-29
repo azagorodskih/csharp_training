@@ -32,6 +32,7 @@ namespace mantis_tests
             projectHelper = new ProjectHelper(this);
             Registration = new RegistrationHelper(this);
             Ftp = new FtpHelper(this);
+            API = new APIHelper(this);
         }
 
        ~ApplicationManager()
@@ -100,5 +101,7 @@ namespace mantis_tests
         public RegistrationHelper Registration { get; set; }
 
         public FtpHelper Ftp { get; set; }
+
+        public APIHelper API { get; set; }
     }
 }

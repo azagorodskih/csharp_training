@@ -15,7 +15,7 @@ namespace mantis_tests
         {
             int index = 0; //для упрощения будем удалять самый первый проект
 
-            List<ProjectData> oldProjects = app.Project.GetProjects();
+            List<ProjectData> oldProjects = app.Project.GetProjectsFromUI();
             if (oldProjects.Count == 0)
             {
                 ProjectData p = new ProjectData("ttt");
@@ -35,7 +35,7 @@ namespace mantis_tests
             oldProjects.RemoveAt(index);
 
             Finish:
-                List<ProjectData> newProjects = app.Project.GetProjects();
+                List<ProjectData> newProjects = app.Project.GetProjectsFromUI();
                 oldProjects.Sort();
                 newProjects.Sort();
                 Assert.AreEqual(oldProjects, newProjects);

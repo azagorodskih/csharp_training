@@ -44,7 +44,7 @@ namespace mantis_tests
             client.Rename(backupPath, path);
         }
 
-        public void Upload(String path,Stream localFile)
+        public void Upload(String path, Stream localFile)
         {
             if (client.FileExists(path))
             {

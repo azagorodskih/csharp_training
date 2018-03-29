@@ -58,7 +58,7 @@ namespace mantis_tests
             element.FindElement(By.XPath("./td[1]/a")).Click();
         }
 
-        public List<ProjectData> GetProjects()
+        public List<ProjectData> GetProjectsFromUI()
         {
             List<ProjectData> projects = new List<ProjectData>();
 
@@ -70,6 +70,24 @@ namespace mantis_tests
             {
                 string name = element.FindElement(By.XPath("./td[1]/a")).Text;
                 string description = element.FindElement(By.XPath("./td[5]")).Text;
+                projects.Add(new ProjectData(name)
+                {
+                    Description = description
+                });
+            }
+            return projects;
+        }
+
+        public List<ProjectData> GetProjectsFromSoap()
+        {
+            List<ProjectData> projects = new List<ProjectData>();
+            Mantis.MantisConnectPortTypeClient client = new Mantis.MantisConnectPortTypeClient();
+
+            Mantis.ProjectData[] mc_projects = client.mc_projects_get_user_accessible("administrator", "root");
+            foreach(Mantis.ProjectData mc_project in mc_projects)
+            {
+                string name = mc_project.name;
+                string description = mc_project.description;
                 projects.Add(new ProjectData(name)
                 {
                     Description = description

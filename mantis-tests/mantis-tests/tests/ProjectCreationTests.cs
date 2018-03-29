@@ -19,7 +19,7 @@ namespace mantis_tests
                 Description = "Project1 Description"
             };
 
-            List<ProjectData> oldProjects = app.Project.GetProjects();
+            List<ProjectData> oldProjects = app.Project.GetProjectsFromUI();
 
             bool isExist = false;
             foreach (ProjectData p in oldProjects)
@@ -41,7 +41,7 @@ namespace mantis_tests
                 {
                     oldProjects.Add(newProject);
 
-                    List<ProjectData> newProjects = app.Project.GetProjects();
+                    List<ProjectData> newProjects = app.Project.GetProjectsFromUI();
                     oldProjects.Sort();
                     newProjects.Sort();
                     Assert.AreEqual(oldProjects, newProjects);
@@ -66,7 +66,7 @@ namespace mantis_tests
                 Description = "Project1 Description"
             };
 
-            List<ProjectData> oldProjects = app.Project.GetProjects();
+            List<ProjectData> oldProjects = app.Project.GetProjectsFromUI();
 
             bool isExist = false;
             foreach (ProjectData p in oldProjects)
@@ -87,7 +87,7 @@ namespace mantis_tests
                 if (!isSuccess)
                 {
                     //проверяем, что список проектов не поменялся
-                    List<ProjectData> newProjects = app.Project.GetProjects();
+                    List<ProjectData> newProjects = app.Project.GetProjectsFromUI();
                     oldProjects.Sort();
                     newProjects.Sort();
                     Assert.AreEqual(oldProjects, newProjects);
@@ -100,6 +100,53 @@ namespace mantis_tests
             else
             {
                 Console.Out.Write("Проекта с именем " + newProject.Name + " не существует! Для тестирования неоходимо создавать проект с существующим названием.");
+            }
+        }
+
+        [Test]
+        //создать проект с несуществующим именем; список проектов получать через веб-сервис
+        public void CreateProjectTest_WithWebService()
+        {
+            ProjectData newProject = new ProjectData("Project1")
+            {
+                Description = "Project1 Description"
+            };
+
+            List<ProjectData> oldProjects = app.Project.GetProjectsFromSoap();
+
+            bool isExist = false;
+            foreach (ProjectData p in oldProjects)
+            {
+                if (p.Name == newProject.Name)
+                {
+                    isExist = true;
+                }
+                if (isExist)
+                {
+                    break;
+                }
+            }
+
+            if (!isExist)
+            {
+                bool isSuccess = app.Project.Create(newProject);
+                if (isSuccess)
+                {
+                    oldProjects.Add(newProject);
+
+                    List<ProjectData> newProjects = app.Project.GetProjectsFromSoap();
+                    oldProjects.Sort();
+                    newProjects.Sort();
+                    Assert.AreEqual(oldProjects, newProjects);
+                }
+                else
+                {
+                    Console.Out.Write("При создании проекта возникла непредвиденная ошибка! Возможно, проект с именем " + newProject.Name + " уже существует.");
+                }
+            }
+            else
+            {
+                Console.Out.Write("Проект с именем " + newProject.Name + " уже существует!");
             }
         }
     }
